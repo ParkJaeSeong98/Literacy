@@ -36,7 +36,7 @@ const WordRelay = () => {
       <div>{result}</div>
     </>
   );
-};
+}
 
 function KoreanDictionary() {
   const [tempInput, setTempInput] = useState(''); // 임시로 입력값을 저장할 상태
@@ -58,7 +58,7 @@ function KoreanDictionary() {
     .then((data) => {
       console.log(query);
       console.log(data);
-      const fetchedWords = data.channel.item.map(item => item.word);
+      const fetchedWords = data.channel.item.map(item => item.word.replace(/-/g, ''));
       setWords(fetchedWords); // API 응답에서 가져온 단어들을 상태에 저장
     })
     .catch((error) => {
@@ -96,6 +96,80 @@ function KoreanDictionary() {
   );
 }
 
+// API 활용한 끝말잇기
+const WordRelay_API = () => {
+  const [word, setWord] = useState('시작');
+  const [value, setValue] = useState('');
+  const [result, setResult] = useState('');
+  const [words, setWords] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const inputEl = React.useRef(null);
+
+  const getJsonFromDictionaryAPI = async (query) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/search?q=${query}`);
+      const data = await response.json();
+      let fetchedWords = data.channel.item.map(item => item.word.replace(/[-^]/g, '')).filter(word => word.length > 1);  
+      // '-' 이거 제거하고, 길이 1인거 제외
+      //console.log(fetchedWords.length);
+      console.log(fetchedWords);
+      const setFetchedWords = new Set(fetchedWords);
+      fetchedWords = [...setFetchedWords];
+      //console.log(fetchedWords.length);
+      console.log(fetchedWords);
+
+      setWords(fetchedWords);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (words.length > 0) {
+      setWord(words[50]);
+      console.log(words[13]);
+    }
+  }, [words]);
+
+  const onSubmitForm = async (e) => {
+    e.preventDefault();
+    if (word[word.length - 1] === value[0]) {
+      await getJsonFromDictionaryAPI(value[value.length - 1]);
+      /*
+      if (words.length === 0) {  // 존재하지 않는 단어일 때
+        setResult('땡');
+        setValue('');
+        inputEl.current.focus();
+        return;
+      }
+      */
+      setResult('딩동댕');
+      setValue('');
+      inputEl.current.focus();
+    } else {          
+      setResult('땡');
+      setValue('');
+      inputEl.current.focus();
+    }
+  };
+
+  return (
+    <>
+      <div>{word}</div>
+      <form onSubmit={onSubmitForm}>
+        <input
+          ref={inputEl}
+          value={value}
+          onChange={(e) => setValue(e.currentTarget.value)}
+        />
+        <button>입력!</button>
+      </form>
+      <div>{result}</div>
+    </>
+  );
+}
+
+
 function App() {
   return (
     <BrowserRouter>
@@ -103,11 +177,13 @@ function App() {
         <div className="App">
           <h2><Link to='/function1'>기능1</Link></h2>
           <h2><Link to='/function2'>기능2</Link></h2>
+          <h2><Link to='/function3'>기능3</Link></h2>
           <br />
         </div>
         <Routes>
           <Route path="/function1" element={<KoreanDictionary></KoreanDictionary>} />
           <Route path="/function2" element={<WordRelay></WordRelay>} />
+          <Route path="/function3" element={<WordRelay_API></WordRelay_API>} />
         </Routes>
       </div>
     </BrowserRouter>
