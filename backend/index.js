@@ -5,6 +5,13 @@ const path = require('path');
 const app = express();
 const port = 3000;
 
+
+// api 요청 옵션 변수
+const start = 1; // 검색 시작지점
+const end = 30; // 검색 끝지점
+const pos = 1; // pos 옵션 1~27까지 선택 가능 (ex. 1: 명사, 5: 동사)
+
+
 const API_URL = 'http://opendict.korean.go.kr/api/search';
 const API_KEY = '3EA002DAFA58218A192AC80E387B8334'; // 우리말샘 오양호 발급키
 
@@ -20,7 +27,7 @@ app.get('/api/search', async (req, res) => {
   const query = req.query.q;
 
   try {
-    const response = await fetch(`${API_URL}?certkey_no=6027&key=${API_KEY}&target_type=search&req_type=json&part=word&q=${query}&sort=dict&start=1&num=100`); //start, end 조정가능
+    const response = await fetch(`${API_URL}?key=${API_KEY}&target_type=search&req_type=json&q=${query}&sort=popular&start=${start}&num=${end}&advanced=y&target=1&method=start&type1=word&type2=all&type3=all&type4=all&pos=${pos}`); //start, end 조정가능
     const data = await response.json();
     res.json(data); // API 응답을 리액트 앱에 전달
   } catch (error) { // 에러 처리
