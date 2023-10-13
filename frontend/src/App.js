@@ -102,7 +102,8 @@ const WordRelay_API = () => {
   const [value, setValue] = useState('');
   const [result, setResult] = useState('');
   const [words, setWords] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [previous, setPrevious] = useState([word]); // 사용했던 단어를 담을 공간
+  const [currentIndex, setCurrentIndex] = useState(0); // 티뱅이님 이 부분이 사용되지 않고 있어요.
   const inputEl = React.useRef(null);
 
   const getJsonFromDictionaryAPI = async (query) => {
@@ -125,28 +126,45 @@ const WordRelay_API = () => {
   };
 
   useEffect(() => {
-    if (words.length > 0) {
-      setWord(words[50]);
-      console.log(words[13]);
+    if ((words.length > 0)) {
+      setWord(words[5]);
+      setPrevious(previous => [...previous, word]);
     }
   }, [words]);
 
+  // 실제로 존재하는 단어인지 검사할 함수
+  const isRealWord = async (input) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/inspect?q=${input}`);
+      const data = await response.json();
+      const fetchedWords = data.channel.item.map(item => item.word);
+      
+      if ((fetchedWords) && (fetchedWords.length > 0)) { // 배열이 존재하는지 + 배열의 길이가 0보다 큰지 검사
+        // console.log('this word is true'); // 작동 확인용
+        return true;
+      } else {
+        // console.log('this word is false');
+        return false;
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      return false;
+    }
+  };
+
+  // 사용자가 입력한 단어에 대한 처리를 담당하는 함수
   const onSubmitForm = async (e) => {
     e.preventDefault();
-    if (word[word.length - 1] === value[0]) {
+
+    const isReal = await isRealWord(value);
+    const isUsed = !(previous.includes(value)); // previous 안에 입력한 단어가 존재하는지 판단할 변수
+    if ((word[word.length - 1] === value[0]) && (isReal) && (isUsed))  {
       await getJsonFromDictionaryAPI(value[value.length - 1]);
-      /*
-      if (words.length === 0) {  // 존재하지 않는 단어일 때
-        setResult('땡');
-        setValue('');
-        inputEl.current.focus();
-        return;
-      }
-      */
       setResult('딩동댕');
+      setPrevious(previous => [...previous, value]);
       setValue('');
       inputEl.current.focus();
-    } else {          
+    } else { 
       setResult('땡');
       setValue('');
       inputEl.current.focus();
@@ -155,7 +173,8 @@ const WordRelay_API = () => {
 
   return (
     <>
-      <div>{word}</div>
+      <div>제시 단어: {word}</div>
+      <div>사용했던 단어 목록: {previous}</div>
       <form onSubmit={onSubmitForm}>
         <input
           ref={inputEl}
