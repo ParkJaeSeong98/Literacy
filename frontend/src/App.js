@@ -97,13 +97,12 @@ function KoreanDictionary() {
 }
 
 // API 활용한 끝말잇기
-const WordRelay_API = () => {
+const WordRelayAPI = () => {
   const [word, setWord] = useState('시작');
   const [value, setValue] = useState('');
   const [result, setResult] = useState('');
   const [words, setWords] = useState([]);
-  const [previous, setPrevious] = useState([word]); // 사용했던 단어를 담을 공간
-  const [currentIndex, setCurrentIndex] = useState(0); // 티뱅이님 이 부분이 사용되지 않고 있어요.
+  const [previous, setPrevious] = useState(['시작']); // 사용했던 단어를 담을 공간
   const inputEl = React.useRef(null);
 
   const getJsonFromDictionaryAPI = async (query) => {
@@ -126,9 +125,14 @@ const WordRelay_API = () => {
   };
 
   useEffect(() => {
-    if ((words.length > 0)) {
-      setWord(words[5]);
-      setPrevious(previous => [...previous, word]);
+    if (words.length > 0) {
+      let randIndex;
+      do {
+        randIndex = Math.floor(Math.random() * (words.length + 1));
+      } while (previous.includes(words[randIndex]));
+  
+      setWord(words[randIndex]);
+      setPrevious(previous => [...previous, words[randIndex]]);
     }
   }, [words]);
 
@@ -158,6 +162,7 @@ const WordRelay_API = () => {
 
     const isReal = await isRealWord(value);
     const isUsed = !(previous.includes(value)); // previous 안에 입력한 단어가 존재하는지 판단할 변수
+
     if ((word[word.length - 1] === value[0]) && (isReal) && (isUsed))  {
       await getJsonFromDictionaryAPI(value[value.length - 1]);
       setResult('딩동댕');
@@ -202,7 +207,7 @@ function App() {
         <Routes>
           <Route path="/function1" element={<KoreanDictionary></KoreanDictionary>} />
           <Route path="/function2" element={<WordRelay></WordRelay>} />
-          <Route path="/function3" element={<WordRelay_API></WordRelay_API>} />
+          <Route path="/function3" element={<WordRelayAPI></WordRelayAPI>} />
         </Routes>
       </div>
     </BrowserRouter>
