@@ -98,11 +98,11 @@ function KoreanDictionary() {
 
 // API 활용한 끝말잇기
 const WordRelayAPI = () => {
-  const [word, setWord] = useState('시작');
+  const [word, setWord] = useState('남자');
   const [value, setValue] = useState('');
   const [result, setResult] = useState('');
   const [words, setWords] = useState([]);
-  const [previous, setPrevious] = useState(['시작']); // 사용했던 단어를 담을 공간
+  const [previous, setPrevious] = useState([word]); // 사용했던 단어를 담을 공간
   const inputEl = React.useRef(null);
 
   const getJsonFromDictionaryAPI = async (query) => {
@@ -156,6 +156,38 @@ const WordRelayAPI = () => {
     }
   };
 
+  function convertDueum(s) {
+    if (!s) return '';
+    const HANGUL_FIRST_CODE = 44032;
+    const HANGUL_LAST_CODE = 55203;
+    const JONGSEONG_LEN = 28;
+  
+    let c = s.charCodeAt(0);
+    if (c < HANGUL_FIRST_CODE || c > HANGUL_LAST_CODE) return s;
+  
+    switch (Math.floor((c - HANGUL_FIRST_CODE) / JONGSEONG_LEN)) {
+        // 녀, 뇨, 뉴, 니
+        case 48: case 54:
+        case 59: case 62:
+            c += 5292;
+            break;
+        // 랴, 려, 례, 료, 류, 리
+        case 107: case 111:
+        case 112: case 117:
+        case 122: case 125:
+            c += 3528;
+            break;
+        // 라, 래, 로, 뢰, 루, 르
+        case 105: case 106:
+        case 113: case 116:
+        case 118: case 123:
+            c -= 1764;
+            break;
+    }
+  
+    return String.fromCharCode(c) + s.slice(1);
+  };
+
   // 사용자가 입력한 단어에 대한 처리를 담당하는 함수
   const onSubmitForm = async (e) => {
     e.preventDefault();
@@ -163,8 +195,8 @@ const WordRelayAPI = () => {
     const isReal = await isRealWord(value);
     const isUsed = !(previous.includes(value)); // previous 안에 입력한 단어가 존재하는지 판단할 변수
 
-    if ((word[word.length - 1] === value[0]) && (isReal) && (isUsed))  {
-      await getJsonFromDictionaryAPI(value[value.length - 1]);
+    if ((convertDueum(word[word.length - 1]) === value[0]) && (isReal) && (isUsed))  {
+      await getJsonFromDictionaryAPI(convertDueum(value[value.length - 1]));
       setResult('딩동댕');
       setPrevious(previous => [...previous, value]);
       setValue('');
