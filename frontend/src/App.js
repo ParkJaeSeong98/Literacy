@@ -197,6 +197,7 @@ const WordRelayAPI = () => {
     const handleAnswerSubmit = () => {
       if (selectedAnswer === 'apple') {
         setResult('정답입니다!');
+        setModalIsOpen(false);
       } else {
         setResult('틀렸습니다. 다시 시도하세요.');
       }
