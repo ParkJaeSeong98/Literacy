@@ -97,6 +97,8 @@ function KoreanDictionary() {
   );
 }
 
+
+
 // API 활용한 끝말잇기
 const WordRelayAPI = () => {
   const [word, setWord] = useState('남자');
@@ -109,7 +111,8 @@ const WordRelayAPI = () => {
 
   const getJsonFromDictionaryAPI = async (query) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/search?q=${query}`);
+      const response = await fetch(`http://localhost:3000/api/search?q=${query}&method=start&target=1`);
+      // method: start, target: 1
       const data = await response.json();
       let fetchedWords = data.channel.item.map(item => item.word.replace(/[-^]/g, '')).filter(word => word.length > 1);  
       // '-' 이거 제거하고, 길이 1인거 제외
@@ -142,7 +145,8 @@ const WordRelayAPI = () => {
   // 실제로 존재하는 단어인지 검사할 함수
   const isRealWord = async (input) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/inspect?q=${input}`);
+      const response = await fetch(`http://localhost:3000/api/search?q=${input}&method=exact&target=1`);
+      // method: exact, target: 1
       const data = await response.json();
       const fetchedWords = data.channel.item.map(item => item.word);
       

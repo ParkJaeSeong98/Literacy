@@ -25,23 +25,11 @@ app.get('/', (req, res) => {
 
 app.get('/api/search', async (req, res) => {
   const query = req.query.q;
+  const method = req.query.method; // start: 그것으로 시작하는, exact: 정확히 일치하는
+  const target = req.query.target; // 1: 어휘, 9: 뜻 풀이, 10: 용례
 
   try {
-    const response = await fetch(`${API_URL}?key=${API_KEY}&target_type=search&req_type=json&q=${query}&sort=popular&start=${start}&num=${end}&advanced=y&target=1&method=start&type1=word&type2=all&type3=all&type4=all&pos=${pos}`); //start, end 조정가능
-    const data = await response.json();
-    res.json(data); // API 응답을 리액트 앱에 전달
-  } catch (error) { // 에러 처리
-    console.error('Error fetching from the dictionary API:', error);
-    res.status(500).json({ error: 'Failed to fetch data' });
-  }
-  
-});
-
-app.get('/api/inspect', async (req, res) => {
-  const query = req.query.q;
-
-  try {
-    const response = await fetch(`${API_URL}?key=${API_KEY}&target_type=search&req_type=json&q=${query}&sort=popular&start=${start}&num=${end}&advanced=y&target=1&method=exact&type1=word&type2=all&type3=all&type4=all&pos=${pos}`); //start, end 조정가능
+    const response = await fetch(`${API_URL}?key=${API_KEY}&target_type=search&req_type=json&q=${query}&sort=popular&start=${start}&num=${end}&advanced=y&target=${target}&method=${method}&type1=word&type2=all&type3=all&type4=all&pos=${pos}`); //start, end 조정가능
     const data = await response.json();
     res.json(data); // API 응답을 리액트 앱에 전달
   } catch (error) { // 에러 처리
