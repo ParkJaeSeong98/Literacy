@@ -123,6 +123,7 @@ const WordRelayAPI = () => {
       setWords(fetchedWords);
     } catch (error) {
       console.error("Error fetching data:", error);
+      throw error; // 에러를 상위 함수에 전달
     }
   };
 
@@ -154,7 +155,7 @@ const WordRelayAPI = () => {
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-      return false;
+      return null; // 이 경우에는 throw를 쓸 수 없어서 특별한 값을 반환하도록 함.
     }
   };
 
@@ -263,24 +264,39 @@ const WordRelayAPI = () => {
   const onSubmitForm = async (e) => {
     e.preventDefault();
 
-    const isReal = await isRealWord(value);
-    const isUsed = !(previous.includes(value)); // previous 안에 입력한 단어가 존재하는지 판단할 변수
+    try {
+      const isReal = await isRealWord(value); // null은 false로 처리됨.
+      const isUsed = !(previous.includes(value)); // previous 안에 입력한 단어가 존재하는지 판단할 변수
+      
+      if ((convertDueum(word[word.length - 1]) === value[0]) && (isReal) && (isUsed) && (value.length > 1))  {
+        await getJsonFromDictionaryAPI(convertDueum(value[value.length - 1]));
+        setResult('딩동댕');
+        setPrevious(previous => [...previous, value]);
+        setValue('');
+        inputEl.current.focus();
 
-    if ((convertDueum(word[word.length - 1]) === value[0]) && (isReal) && (isUsed) && value.length > 1)  {
-      await getJsonFromDictionaryAPI(convertDueum(value[value.length - 1]));
-      setResult('딩동댕');
-      setPrevious(previous => [...previous, value]);
-      setValue('');
-      inputEl.current.focus();
+        // 모달 팝업
+        setModalIsOpen(true);
 
-      // 모달 팝업
-      setModalIsOpen(true);
+      } else {
+        if (isReal === null) {
+          setResult('죄송합니다. 다시 시도해주세요.');
+          setValue('');
+          inputEl.current.focus();
+        } else {
+          setResult('땡');
+          setValue('');
+          inputEl.current.focus();
+        }
+      }
 
-    } else { 
-      setResult('땡');
+    } catch (error){
+      console.error("Error:", error);
+      setResult('죄송합니다. 다시 시도해주세요.');
       setValue('');
       inputEl.current.focus();
     }
+    
   };
 
   return (
