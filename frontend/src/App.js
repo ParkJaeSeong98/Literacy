@@ -1,6 +1,7 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, BrowserRouter, Link } from 'react-router-dom';
+import Modal from 'react-modal';
 
 const WordRelay = () => {
   const [word, setWord] = useState('시작');
@@ -103,6 +104,7 @@ const WordRelayAPI = () => {
   const [result, setResult] = useState('');
   const [words, setWords] = useState([]);
   const [previous, setPrevious] = useState([word]); // 사용했던 단어를 담을 공간
+  const [modalIsOpen, setModalIsOpen] = useState(false);  // 모달 팝업 위한 변수
   const inputEl = React.useRef(null);
 
   const getJsonFromDictionaryAPI = async (query) => {
@@ -188,6 +190,74 @@ const WordRelayAPI = () => {
     return String.fromCharCode(c) + s.slice(1);
   };
 
+  function MultipleChoiceQuestion() {
+    const [selectedAnswer, setSelectedAnswer] = useState('');
+    const [result, setResult] = useState('');
+  
+    const handleAnswerSubmit = () => {
+      if (selectedAnswer === 'apple') {
+        setResult('정답입니다!');
+      } else {
+        setResult('틀렸습니다. 다시 시도하세요.');
+      }
+    };
+  
+    return (
+      <div>
+        <label>
+          <input
+            type="radio"
+            name="answer"
+            value="apple"
+            checked={selectedAnswer === 'apple'}
+            onChange={() => setSelectedAnswer('apple')}
+          />
+          사과
+        </label>
+        <br />
+  
+        <label>
+          <input
+            type="radio"
+            name="answer"
+            value="carrot"
+            checked={selectedAnswer === 'carrot'}
+            onChange={() => setSelectedAnswer('carrot')}
+          />
+          당근
+        </label>
+        <br />
+  
+        <label>
+          <input
+            type="radio"
+            name="answer"
+            value="banana"
+            checked={selectedAnswer === 'banana'}
+            onChange={() => setSelectedAnswer('banana')}
+          />
+          바나나
+        </label>
+        <br />
+  
+        <label>
+          <input
+            type="radio"
+            name="answer"
+            value="potato"
+            checked={selectedAnswer === 'potato'}
+            onChange={() => setSelectedAnswer('potato')}
+          />
+          감자
+        </label>
+        <br />
+  
+        <button onClick={handleAnswerSubmit}>제출</button>
+        <p>{result}</p>
+      </div>
+    );
+  }
+
   // 사용자가 입력한 단어에 대한 처리를 담당하는 함수
   const onSubmitForm = async (e) => {
     e.preventDefault();
@@ -195,12 +265,16 @@ const WordRelayAPI = () => {
     const isReal = await isRealWord(value);
     const isUsed = !(previous.includes(value)); // previous 안에 입력한 단어가 존재하는지 판단할 변수
 
-    if ((convertDueum(word[word.length - 1]) === value[0]) && (isReal) && (isUsed))  {
+    if ((convertDueum(word[word.length - 1]) === value[0]) && (isReal) && (isUsed) && value.length > 1)  {
       await getJsonFromDictionaryAPI(convertDueum(value[value.length - 1]));
       setResult('딩동댕');
       setPrevious(previous => [...previous, value]);
       setValue('');
       inputEl.current.focus();
+
+      // 모달 팝업
+      setModalIsOpen(true);
+
     } else { 
       setResult('땡');
       setValue('');
@@ -220,6 +294,10 @@ const WordRelayAPI = () => {
         />
         <button>입력!</button>
       </form>
+      <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
+        <h2>{previous[previous.length - 2]}의 뜻을 고르세요!</h2>
+        <MultipleChoiceQuestion></MultipleChoiceQuestion>
+      </Modal>
       <div>{result}</div>
     </>
   );
