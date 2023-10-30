@@ -50,13 +50,17 @@ const WordRelay = () => {
     const [previous, setPrevious] = useState([word]); // 사용했던 단어를 담을 공간
     const [modalIsOpen, setModalIsOpen] = useState(false);  // 모달 팝업 위한 변수
     const inputEl = React.useRef(null);
-  
+
+    const [meaning, setMeaning] = useState([]);
+    const [randomWord, setRandomWord] = useState(['발전', '지구', '행성']);
+    const [wrongAnswer, setWrongAnswer] = useState([]);
+
     const getJsonFromDictionaryAPI = async (query) => {
       try {
         const response = await fetch(`http://localhost:3000/api/search?q=${query}&method=start&target=1`);
         // method: start, target: 1
         const data = await response.json();
-        let fetchedWords = data.channel.item.map(item => item.word.replace(/[-^]/g, '')).filter(word => word.length > 1);  
+        let fetchedWords = data.channel.item.map(item => item.word.replace(/[-^]/g, '')).filter(word => word.length > 1); 
         // '-' 이거 제거하고, 길이 1인거 제외
         //console.log(fetchedWords.length);
         console.log(fetchedWords);
@@ -71,19 +75,36 @@ const WordRelay = () => {
         throw error; // 에러를 상위 함수에 전달
       }
     };
-  
+
     useEffect(() => {
       if (words.length > 0) {
         let randIndex;
         do {
           randIndex = Math.floor(Math.random() * (words.length + 1));
         } while (previous.includes(words[randIndex]));
-    
+   
         setWord(words[randIndex]);
         setPrevious(previous => [...previous, words[randIndex]]);
       }
     }, [words]);
   
+    // 실제로 존재하는 단어인지 검사할 함수
+    const getMeaning = async (input) => {
+      try {
+        const response = await fetch(`http://localhost:3000/api/search?q=${input}&method=exact&target=1`);
+        const data = await response.json();
+        
+        const fetchedMeaning = data.channel.item.map(item => item.sense.map(s => s.definition));
+        
+        console.log(fetchedMeaning);
+
+        return fetchedMeaning;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        throw error;
+      }
+    };
+
     // 실제로 존재하는 단어인지 검사할 함수
     const isRealWord = async (input) => {
       try {
@@ -140,7 +161,7 @@ const WordRelay = () => {
     function MultipleChoiceQuestion() {
       const [selectedAnswer, setSelectedAnswer] = useState('');
       const [result, setResult] = useState('');
-    
+
       const handleAnswerSubmit = () => {
         if (selectedAnswer === 'apple') {
           setResult('정답입니다!');
@@ -160,7 +181,7 @@ const WordRelay = () => {
               checked={selectedAnswer === 'apple'}
               onChange={() => setSelectedAnswer('apple')}
             />
-            사과
+            {meaning}
           </label>
           <br />
     
@@ -172,7 +193,7 @@ const WordRelay = () => {
               checked={selectedAnswer === 'carrot'}
               onChange={() => setSelectedAnswer('carrot')}
             />
-            당근
+            {wrongAnswer[0]}
           </label>
           <br />
     
@@ -184,7 +205,7 @@ const WordRelay = () => {
               checked={selectedAnswer === 'banana'}
               onChange={() => setSelectedAnswer('banana')}
             />
-            바나나
+            {wrongAnswer[1]}
           </label>
           <br />
     
@@ -196,7 +217,7 @@ const WordRelay = () => {
               checked={selectedAnswer === 'potato'}
               onChange={() => setSelectedAnswer('potato')}
             />
-            감자
+            {wrongAnswer[2]}
           </label>
           <br />
     
@@ -214,6 +235,21 @@ const WordRelay = () => {
         const isReal = await isRealWord(value); // null은 false로 처리됨.
         const isUsed = !(previous.includes(value)); // previous 안에 입력한 단어가 존재하는지 판단할 변수
         
+        // 정답 및 오답 뜻 넣기
+        const tempMeaning = await getMeaning(value); // 정답 뜻
+        const firstAnswerRandomIndex = Math.floor(Math.random() * tempMeaning.length); // 정답 랜덤 인덱스
+        setMeaning(tempMeaning[firstAnswerRandomIndex]); // 정답 설정
+
+        const tempWrong1 = await getMeaning(randomWord[0]); // 오답1 뜻
+        const tempWrong2 = await getMeaning(randomWord[1]); // 오답2 뜻
+        const tempWrong3 = await getMeaning(randomWord[2]); // 오답3 뜻
+
+        const secondAnswerRandomIndex = Math.floor(Math.random() * tempWrong1.length); // 오답1 랜덤 인덱스
+        const thirdAnswerRandomIndex = Math.floor(Math.random() * tempWrong2.length); // 오답2 랜덤 인덱스
+        const forthAnswerRandomIndex = Math.floor(Math.random() * tempWrong3.length); // 오답3 랜덤 인덱스
+
+        setWrongAnswer([tempWrong1[secondAnswerRandomIndex], tempWrong2[thirdAnswerRandomIndex], tempWrong3[forthAnswerRandomIndex]]); // 오답 설정
+
         if ((convertDueum(word[word.length - 1]) === value[0]) && (isReal) && (isUsed) && (value.length > 1))  {
           await getJsonFromDictionaryAPI(convertDueum(value[value.length - 1]));
           setResult('딩동댕');
