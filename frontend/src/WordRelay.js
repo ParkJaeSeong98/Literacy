@@ -52,7 +52,7 @@ const WordRelay = () => {
     const inputEl = React.useRef(null);
 
     const [meaning, setMeaning] = useState([]);
-    const [randomWord, setRandomWord] = useState(['발전', '지구', '행성']);
+    const [randomWord, setRandomWord] = useState(['발전', '지구', '행성']); // 임시 오답 단어 추후에 DB에서 가져와서 3 발전,지구,행성 대신 다른 단어로 무작위 하게 이 배열을 채우면 됨.
     const [wrongAnswer, setWrongAnswer] = useState([]);
 
     const getJsonFromDictionaryAPI = async (query) => {
