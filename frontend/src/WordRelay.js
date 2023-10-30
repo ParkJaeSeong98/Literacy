@@ -88,7 +88,7 @@ const WordRelay = () => {
       }
     }, [words]);
   
-    // 실제로 존재하는 단어인지 검사할 함수
+    // 단어 뜻 가져오는 함수
     const getMeaning = async (input) => {
       try {
         const response = await fetch(`http://localhost:3000/api/search?q=${input}&method=exact&target=1`);
