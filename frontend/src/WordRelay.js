@@ -55,6 +55,8 @@ const WordRelay = () => {
     const [randomWord, setRandomWord] = useState(['발전', '지구', '행성']); // 임시 오답 단어 추후에 DB에서 가져와서 3 발전,지구,행성 대신 다른 단어로 무작위 하게 이 배열을 채우면 됨.
     const [wrongAnswer, setWrongAnswer] = useState([]);
 
+    const [answers, setAnswers] = useState([]); // 답 한 곳에 모으기
+
     const getJsonFromDictionaryAPI = async (query) => {
       try {
         const response = await fetch(`http://localhost:3000/api/search?q=${query}&method=start&target=1`);
@@ -87,6 +89,20 @@ const WordRelay = () => {
         setPrevious(previous => [...previous, words[randIndex]]);
       }
     }, [words]);
+
+    useEffect(() => {
+      if (meaning && wrongAnswer.length === 3) {
+        const combinedAnswers = [meaning, ...wrongAnswer];
+
+        // 답안 랜덤으로 섞기
+        for (let i = combinedAnswers.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [combinedAnswers[i], combinedAnswers[j]] = [combinedAnswers[j], combinedAnswers[i]];
+        }
+
+        setAnswers(combinedAnswers);
+      }
+    }, [meaning, wrongAnswer]);
   
     // 단어 뜻 가져오는 함수
     const getMeaning = async (input) => {
@@ -161,9 +177,11 @@ const WordRelay = () => {
     function MultipleChoiceQuestion() {
       const [selectedAnswer, setSelectedAnswer] = useState('');
       const [result, setResult] = useState('');
+      
+      const choices = answers;
 
       const handleAnswerSubmit = () => {
-        if (selectedAnswer === 'apple') {
+        if (selectedAnswer === meaning) {
           setResult('정답입니다!');
           setModalIsOpen(false);
         } else {
@@ -173,60 +191,27 @@ const WordRelay = () => {
     
       return (
         <div>
-          <label>
-            <input
-              type="radio"
-              name="answer"
-              value="apple"
-              checked={selectedAnswer === 'apple'}
-              onChange={() => setSelectedAnswer('apple')}
-            />
-            {meaning}
-          </label>
-          <br />
-    
-          <label>
-            <input
-              type="radio"
-              name="answer"
-              value="carrot"
-              checked={selectedAnswer === 'carrot'}
-              onChange={() => setSelectedAnswer('carrot')}
-            />
-            {wrongAnswer[0]}
-          </label>
-          <br />
-    
-          <label>
-            <input
-              type="radio"
-              name="answer"
-              value="banana"
-              checked={selectedAnswer === 'banana'}
-              onChange={() => setSelectedAnswer('banana')}
-            />
-            {wrongAnswer[1]}
-          </label>
-          <br />
-    
-          <label>
-            <input
-              type="radio"
-              name="answer"
-              value="potato"
-              checked={selectedAnswer === 'potato'}
-              onChange={() => setSelectedAnswer('potato')}
-            />
-            {wrongAnswer[2]}
-          </label>
-          <br />
-    
+          {choices.map((answer, index) => (
+            <div key={index}>
+              <label>
+                <input
+                  type="radio"
+                  name="answer"
+                  value={answer}
+                  checked={selectedAnswer === answer}
+                  onChange={() => setSelectedAnswer(answer)}
+                />
+                {answer}
+              </label>
+              <br />
+            </div>
+          ))}
           <button onClick={handleAnswerSubmit}>제출</button>
           <p>{result}</p>
         </div>
       );
     }
-  
+    
     // 사용자가 입력한 단어에 대한 처리를 담당하는 함수
     const onSubmitForm = async (e) => {
       e.preventDefault();
@@ -234,7 +219,7 @@ const WordRelay = () => {
       try {
         const isReal = await isRealWord(value); // null은 false로 처리됨.
         const isUsed = !(previous.includes(value)); // previous 안에 입력한 단어가 존재하는지 판단할 변수
-        
+
         // 정답 및 오답 뜻 넣기
         const tempMeaning = await getMeaning(value); // 정답 뜻
         const firstAnswerRandomIndex = Math.floor(Math.random() * tempMeaning.length); // 정답 랜덤 인덱스
