@@ -2,7 +2,7 @@ import WordRelay from './WordRelay';
 import Summary from './Summary';
 import PictureBook from './PictureBook';
 import React, { useState } from 'react';
-import { Routes, Route, BrowserRouter, Link, useNavigate } from 'react-router-dom';
+import { Routes, Route, BrowserRouter, Link, useNavigate, Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 import './fonts/fonts.css';
 
@@ -102,8 +102,6 @@ const Tooltip = styled.div`
 
 const BaseLayout = () => {
 
-  const [isTooltipVisible, setTooltipVisible] = useState(false);
-
   return (
     <BaseContainer>
       <HeadContainer>
@@ -117,7 +115,7 @@ const BaseLayout = () => {
       </HeadContainer>
 
       <FunctionWrapper>
-        <SizedBox size='10px'></SizedBox>
+        {/* <SizedBox size='10px'></SizedBox>
         <HeadContainer>
           <HeadText size='60px'>
             <StyledLink to='/'>Literacy</StyledLink>
@@ -145,7 +143,9 @@ const BaseLayout = () => {
             끝말잇기
             <Tooltip show={isTooltipVisible}>끝말잇기로 어휘력을 늘려봐요.</Tooltip>
           </FunctionContainer>
-        </StyledLink>
+        </StyledLink> */}
+
+        <Outlet />
         
         <ContactContainer>
         <img src='/gitlogo.png' alt='logo' margin-top='10' width='25' height='25' /><StyledA href='https://github.com/ParkJaeSeong98/Literacy' target='_blank'> Github</StyledA>
@@ -156,11 +156,51 @@ const BaseLayout = () => {
   );
 }
 
+const HomePage = () => {
+
+  const [isTooltipVisible, setTooltipVisible] = useState(false);
+
+  return (
+    <FunctionWrapper>
+      <SizedBox size='10px'></SizedBox>
+      <HeadContainer>
+        <HeadText size='60px'>
+          <StyledLink to='/'>Literacy</StyledLink>
+        </HeadText>
+      </HeadContainer>
+      
+      <SizedBox size='10px'></SizedBox>
+      <SizedBox></SizedBox>
+      <StyledLink to='/function1' isHovered={true}>
+        <FunctionContainer onMouseEnter={() => setTooltipVisible(true)} onMouseLeave={() => setTooltipVisible(false)}>
+          긴 글 요약
+          <Tooltip show={isTooltipVisible}>글 요약하여 문해력을 길러보세요.</Tooltip>
+        </FunctionContainer>
+      </StyledLink>
+      <SizedBox></SizedBox>
+      <StyledLink to='/function2' isHovered={true}>
+        <FunctionContainer onMouseEnter={() => setTooltipVisible(true)} onMouseLeave={() => setTooltipVisible(false)}>
+          그림 퀴즈
+          <Tooltip show={isTooltipVisible}>그림 퀴즈를 풀어보세요.</Tooltip>
+        </FunctionContainer>
+      </StyledLink>
+      <SizedBox></SizedBox>
+      <StyledLink to='/function3' isHovered={true}>
+        <FunctionContainer onMouseEnter={() => setTooltipVisible(true)} onMouseLeave={() => setTooltipVisible(false)}>
+          끝말잇기
+          <Tooltip show={isTooltipVisible}>끝말잇기로 어휘력을 늘려봐요.</Tooltip>
+        </FunctionContainer>
+      </StyledLink>
+      
+    </FunctionWrapper>
+  ); 
+}
+
 
 function App() {
   return (
     <BrowserRouter>
-      <div>
+      {/* <div>
         <BaseLayout></BaseLayout>
       
         <Routes>
@@ -168,7 +208,16 @@ function App() {
           <Route path="/function2" element={<PictureBook></PictureBook>} />
           <Route path="/function3" element={<WordRelay></WordRelay>} />
         </Routes>
-      </div>
+      </div> */}
+      <Routes>
+        <Route element={<BaseLayout></BaseLayout>}>
+          <Route path="/" element={<HomePage></HomePage>} />
+          <Route path="/function1" element={<Summary></Summary>} />
+          <Route path="/function2" element={<PictureBook></PictureBook>} />
+          <Route path="/function3" element={<WordRelay></WordRelay>} />
+          <Route path="/login" element={<></>} />
+        </Route>
+      </Routes>
     </BrowserRouter>
   );
 }
