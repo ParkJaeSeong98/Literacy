@@ -13,10 +13,17 @@ const WordRelay = () => {
     const inputEl = React.useRef(null);
 
     const [meaning, setMeaning] = useState([]);
+
+    const [meaningPool, setMeaningPool] = useState([]); // 뜻을 가져온 정답 pool
+    const [wrongAnswerPool1, setWrongAnswerPool1] = useState([]); // 오답 pool 1
+    const [wrongAnswerPool2, setWrongAnswerPool2] = useState([]); // 오답 pool 2 
+    const [wrongAnswerPool3, setWrongAnswerPool3] = useState([]); // 오답 pool 3 
+
     const [randomWord, setRandomWord] = useState(['발전', '지구', '행성']); // 임시 오답 단어 추후에 DB에서 가져와서 3 발전,지구,행성 대신 다른 단어로 무작위 하게 이 배열을 채우면 됨.
-    const [wrongAnswer, setWrongAnswer] = useState([]);
 
     const [answers, setAnswers] = useState([]); // 답 한 곳에 모으기
+
+    const [firstAnswerIndex, setFirstAnswerIndex] = useState(0); // 정답 인덱스를 관리할 상태
 
     const getJsonFromDictionaryAPI = async (query) => {
       try {
@@ -52,8 +59,14 @@ const WordRelay = () => {
     }, [words]);
 
     useEffect(() => {
-      if (meaning && wrongAnswer.length === 3) {
-        const combinedAnswers = [meaning, ...wrongAnswer];
+      if ((meaningPool.length > 0) && (wrongAnswerPool1.length > 0) && (wrongAnswerPool2.length > 0) && (wrongAnswerPool3.length > 0)) {
+
+        const secondIndex = Math.floor(Math.random() * wrongAnswerPool1.length); // 오답1 랜덤 인덱스
+        const thirdIndex = Math.floor(Math.random() * wrongAnswerPool2.length); // 오답2 랜덤 인덱스
+        const forthIndex = Math.floor(Math.random() * wrongAnswerPool3.length); // 오답3 랜덤 인덱스
+
+        // 답안 선택지들 모아 놓기
+        const combinedAnswers = [meaningPool[firstAnswerIndex], wrongAnswerPool1[secondIndex], wrongAnswerPool2[thirdIndex], wrongAnswerPool3[forthIndex]];
 
         // 답안 랜덤으로 섞기
         for (let i = combinedAnswers.length - 1; i > 0; i--) {
@@ -63,7 +76,7 @@ const WordRelay = () => {
 
         setAnswers(combinedAnswers);
       }
-    }, [meaning, wrongAnswer]);
+    }, [meaningPool, wrongAnswerPool1, wrongAnswerPool2, wrongAnswerPool3, firstAnswerIndex]);
   
     // 단어 뜻 가져오는 함수
     const getMeaning = async (input) => {
@@ -135,6 +148,21 @@ const WordRelay = () => {
       return String.fromCharCode(c) + s.slice(1);
     };
   
+    const updateAnswerChoices = async () => {
+      let newIndex = firstAnswerIndex + 1; // 정답의 인덱스를 한 칸 올림
+
+      if (newIndex >= meaningPool.length) { // 정답의 인덱스가 범위를 벗어나지 않도록
+        newIndex = 0;
+      }
+
+      setMeaning(meaningPool[newIndex]); // 정답 업데이트
+
+      setFirstAnswerIndex(newIndex); // 인덱스 설정
+      
+    };
+
+    
+
     function MultipleChoiceQuestion() {
       const [selectedAnswer, setSelectedAnswer] = useState('');
       const [result, setResult] = useState('');
@@ -142,8 +170,9 @@ const WordRelay = () => {
       const choices = answers;
 
       const handleAnswerSubmit = () => {
-        if (selectedAnswer === meaning) {
+        if (selectedAnswer === meaningPool[firstAnswerIndex]) {
           setResult('정답입니다!');
+          setFirstAnswerIndex(0); // 인덱스 초기화
           setModalIsOpen(false);
         } else {
           setResult('틀렸습니다. 다시 시도하세요.');
@@ -168,6 +197,7 @@ const WordRelay = () => {
             </div>
           ))}
           <button onClick={handleAnswerSubmit}>제출</button>
+          <button onClick={updateAnswerChoices} disabled={firstAnswerIndex === meaningPool.length - 1}>업데이트</button>
           <p>{result}</p>
         </div>
       );
@@ -183,18 +213,16 @@ const WordRelay = () => {
 
         // 정답 및 오답 뜻 넣기
         const tempMeaning = await getMeaning(value); // 정답 뜻
-        const firstAnswerRandomIndex = Math.floor(Math.random() * tempMeaning.length); // 정답 랜덤 인덱스
-        setMeaning(tempMeaning[firstAnswerRandomIndex]); // 정답 설정
+        setMeaningPool(tempMeaning); // meaingPool에 가져온 뜻 복사
 
-        const tempWrong1 = await getMeaning(randomWord[0]); // 오답1 뜻
-        const tempWrong2 = await getMeaning(randomWord[1]); // 오답2 뜻
-        const tempWrong3 = await getMeaning(randomWord[2]); // 오답3 뜻
+        const tempWrongAnswer1 = await getMeaning(randomWord[0]); // 오답1 뜻
+        const tempWrongAnswer2 = await getMeaning(randomWord[1]); // 오답2 뜻
+        const tempWrongAnswer3 = await getMeaning(randomWord[2]); // 오답3 뜻
 
-        const secondAnswerRandomIndex = Math.floor(Math.random() * tempWrong1.length); // 오답1 랜덤 인덱스
-        const thirdAnswerRandomIndex = Math.floor(Math.random() * tempWrong2.length); // 오답2 랜덤 인덱스
-        const forthAnswerRandomIndex = Math.floor(Math.random() * tempWrong3.length); // 오답3 랜덤 인덱스
-
-        setWrongAnswer([tempWrong1[secondAnswerRandomIndex], tempWrong2[thirdAnswerRandomIndex], tempWrong3[forthAnswerRandomIndex]]); // 오답 설정
+        setWrongAnswerPool1(tempWrongAnswer1); // wrongAnswerPool1에 가져온 오답들 뜻 복사
+        setWrongAnswerPool2(tempWrongAnswer2);
+        setWrongAnswerPool3(tempWrongAnswer3);
+      
 
         if ((convertDueum(word[word.length - 1]) === value[0]) && (isReal) && (isUsed) && (value.length > 1))  {
           await getJsonFromDictionaryAPI(convertDueum(value[value.length - 1]));

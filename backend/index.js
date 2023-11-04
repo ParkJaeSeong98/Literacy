@@ -1,3 +1,10 @@
+const OpenAI = require('openai'); 
+// openai 패키지에서 Configuration과 OpenAIApi 불러오기
+// Configuration : 인증정보 설정 및 OpenAIApi를 사용하기 위한 초기 설정
+// OpenAIApi : OpenAI의 API와 상호작용할 수 있는 메소드 제공
+
+require('dotenv').config({ path: 'APIkeys.env' }); // env 파일에서 api key 추가
+
 const express = require('express');
 const fetch = require('node-fetch'); // npm install node-fetch
 var cors = require('cors');
@@ -13,7 +20,9 @@ const pos = 1; // pos 옵션 1~27까지 선택 가능 (ex. 1: 명사, 5: 동사)
 
 
 const API_URL = 'http://opendict.korean.go.kr/api/search';
-const API_KEY = '3EA002DAFA58218A192AC80E387B8334'; // 우리말샘 오양호 발급키
+const USE_DICTIONARY_API_KEY = process.env.DICTIONARY_API_KEY; // 우리말샘 오양호 발급키
+
+const USE_CHATGPT_API_KEY = process.env.CHATGPT_API_KEY; // chatgpt api 키
 
 app.use(cors()); // 일단 모든 요청에 대해서 cors 허용 이 부분에서 조건 설정도 가능하다고 함.
 
@@ -29,7 +38,7 @@ app.get('/api/search', async (req, res) => {
   const target = req.query.target; // 1: 어휘, 9: 뜻 풀이, 10: 용례
 
   try {
-    const response = await fetch(`${API_URL}?key=${API_KEY}&target_type=search&req_type=json&q=${query}&sort=popular&start=${start}&num=${end}&advanced=y&target=${target}&method=${method}&type1=word&type2=all&type3=all&type4=all&pos=${pos}`); //start, end 조정가능
+    const response = await fetch(`${API_URL}?key=${USE_DICTIONARY_API_KEY}&target_type=search&req_type=json&q=${query}&sort=popular&start=${start}&num=${end}&advanced=y&target=${target}&method=${method}&type1=word&type2=all&type3=all&type4=all&pos=${pos}`); //start, end 조정가능
     const data = await response.json();
     res.json(data); // API 응답을 리액트 앱에 전달
   } catch (error) { // 에러 처리
@@ -39,6 +48,23 @@ app.get('/api/search', async (req, res) => {
   
 });
 
+const openai = new OpenAI({
+  apiKey: USE_CHATGPT_API_KEY,
+}) // api키를 사용하여 OpenAIApi 객체 생성
+
+// async function main() {
+//   const chatCompletion = await openai.chat.completions.create({
+//     messages: [{ role: 'user', content: 'Say this is a test' }],
+//     model: 'gpt-3.5-turbo',
+//   });
+
+//   console.log(chatCompletion.choices);
+// }
+
+// main();
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 });
+
+
