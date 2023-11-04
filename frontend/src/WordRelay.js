@@ -268,7 +268,7 @@ const WordRelay = () => {
   
     return (
       <>
-        <div className="Word">제시 단어: {word}</div>
+        <div>제시 단어: {word}</div>
         <div>사용했던 단어 목록: {previous}</div>
         <StyledForm onSubmit={onSubmitForm}>
           <StyledInput
@@ -278,7 +278,7 @@ const WordRelay = () => {
           />
           <StyledButton>입력!</StyledButton>
         </StyledForm>
-        <StyledModal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
+        <StyledModal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} shouldCloseOnEsc={false} shouldCloseOnOverlayClick={false}>
           <h2>{previous[previous.length - 2]}의 뜻을 고르세요!</h2>
           <MultipleChoiceQuestion></MultipleChoiceQuestion>
         </StyledModal>
