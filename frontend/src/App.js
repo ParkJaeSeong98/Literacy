@@ -5,7 +5,6 @@ import Summary from './Summary';
 import PictureBook from './PictureBook';
 import React from 'react';
 import { Routes, Route, BrowserRouter} from 'react-router-dom';
-import './fonts/fonts.css';
 
 function App() {
   return (

@@ -1,45 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Modal from 'react-modal';
-import styled from 'styled-components';
-
-const StyledForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const StyledInput = styled.input`
-  padding: 8px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  outline: none;
-  text-align: center;
-`;
-
-const StyledButton = styled.button`
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
-  cursor: pointer;
-  outline: none;
-`;
-
-const StyledModal = styled(Modal)`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #fff;
-  width: 600px;
-  padding: 40px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-`;
-
+import { StyledForm, StyledInput, StyledButton, StyledModal } from './StyledComponents.jsx';
 
 // API 활용한 끝말잇기
 const WordRelay = () => {
@@ -49,6 +9,7 @@ const WordRelay = () => {
     const [words, setWords] = useState([]);
     const [previous, setPrevious] = useState([word]); // 사용했던 단어를 담을 공간
     const [modalIsOpen, setModalIsOpen] = useState(false);  // 모달 팝업 위한 변수
+    const [RmodalIsOpen, setRModalIsOpen] = useState(true); // 규칙보여줄 모달
     const inputEl = React.useRef(null);
 
     const [meaning, setMeaning] = useState([]);
@@ -265,9 +226,31 @@ const WordRelay = () => {
       }
       
     };
+
+    const RulesModal = () => {
+    
+      return (
+        <StyledModal
+          isOpen={RmodalIsOpen}
+          onRequestClose={() => setRModalIsOpen(false)}
+          shouldCloseOnEsc={false} // ESC 키로 닫기 비활성화
+          shouldCloseOnOverlayClick={false} // 모달 외부 클릭으로 닫기 비활성화
+        >
+          <h2>끝말잇기 규칙</h2>
+          <ul>
+            <li>사전에 등재된 명사만 사용할 수 있어요.</li>
+            <li>두음법칙 반드시 적용시켜야 해요.</li>
+            <li>이미 사용한 단어와 한 글자 단어는 사용할 수 없어요.</li>
+          </ul>
+          <button onClick={setRModalIsOpen(false)}>확인</button>
+        </StyledModal>
+      );
+    };
   
     return (
       <>
+        <RulesModal></RulesModal>
+
         <div>제시 단어: {word}</div>
         <div>사용했던 단어 목록: {previous}</div>
         <StyledForm onSubmit={onSubmitForm}>

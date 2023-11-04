@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import Modal from 'react-modal';
+import './fonts/fonts.css';
+
+//베이스 + 홈페이지
 
 export const BaseContainer = styled.div`
   width: 100vw; 
@@ -93,4 +97,45 @@ export const Tooltip = styled.div`
   background-color: #333;
   color: white;
   padding: 5px;
+`;
+
+// 끝말잇기
+
+export const StyledForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+export const StyledInput = styled.input`
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  text-align: center;
+`;
+
+export const StyledButton = styled.button`
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  outline: none;
+`;
+
+export const StyledModal = styled(Modal)`
+  font-family: 'logofont';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  width: 600px;
+  padding: 40px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
 `;
