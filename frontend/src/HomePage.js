@@ -8,14 +8,14 @@ const HomePage = () => {
   
     return (
       <FunctionWrapper>
-        <SizedBox size='10px'></SizedBox>
+        <SizedBox size='1.5vh'></SizedBox>
         <HeadContainer>
-          <HeadText size='60px'>
+          <HeadText size='8vh'>
             <StyledLink to='/'>Literacy</StyledLink>
           </HeadText>
         </HeadContainer>
         
-        <SizedBox size='10px'></SizedBox>
+        <SizedBox size='1.5vh'></SizedBox>
         <SizedBox></SizedBox>
         <StyledLink to='/function1' isHovered={true}>
           <FunctionContainer onMouseEnter={() => setTooltipVisible(true)} onMouseLeave={() => setTooltipVisible(false)}>
