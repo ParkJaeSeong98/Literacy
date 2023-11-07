@@ -102,6 +102,14 @@ export const Tooltip = styled.div`
 
 // 끝말잇기
 
+export const ColumnContainer = styled.div`       
+  display: flex;  
+  flex-direction: column;
+  padding-top: 2vh;
+  background-color: #D2B48C;
+  align-items: center;
+`;
+
 export const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
@@ -140,3 +148,7 @@ export const StyledModal = styled(Modal)`
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
 `;
+
+// 드래그
+
+

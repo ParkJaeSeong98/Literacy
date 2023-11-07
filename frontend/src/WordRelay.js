@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { StyledForm, StyledInput, StyledButton, StyledModal } from './StyledComponents.jsx';
+import React, { useState, useEffect, useRef } from 'react';
+import { StyledForm, StyledInput, StyledButton, StyledModal, BaseContainer, HeadContainer, LoginContainer, Logo, HeadText, FunctionContainer, StyledLink, StyledA, FunctionWrapper, SizedBox, ContactContainer, Tooltip, ColumnContainer } from './StyledComponents.jsx';
 
 // API 활용한 끝말잇기
 const WordRelay = () => {
@@ -270,17 +270,37 @@ const WordRelay = () => {
             <li>두음법칙 반드시 적용시켜야 해요.</li>
             <li>이미 사용한 단어와 한 글자 단어는 사용할 수 없어요.</li>
           </ul>
-          <button onClick={setRModalIsOpen(false)}>확인</button>
+          <button onClick={() => setRModalIsOpen(false)}>확인</button>
         </StyledModal>
       );
+    }
+
+    const DraggableContainer = () => {
+    
+      
     };
   
     return (
       <>
         <RulesModal></RulesModal>
 
-        <div>제시 단어: {word}</div>
-        <div>사용했던 단어 목록: {previous}</div>
+        <SizedBox size='1.5vh'></SizedBox>
+        <ColumnContainer>
+          <HeadText size='8vh'>제시 단어</HeadText>
+          <SizedBox></SizedBox>
+          <HeadText size='8vh'>" {word} "</HeadText>
+          <SizedBox size='1.5vh'></SizedBox>
+          <HeadText size='8vh'>{result}</HeadText>
+
+          <DraggableContainer></DraggableContainer>
+          
+        </ColumnContainer>
+
+
+
+        {/* <div>제시 단어: {word}</div>
+        <div>사용했던 단어 목록: {previous}</div> */}
+
         <StyledForm onSubmit={onSubmitForm}>
           <StyledInput
             ref={inputEl}

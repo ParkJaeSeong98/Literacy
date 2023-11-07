@@ -21,7 +21,8 @@ const BaseLayout = () => {
           <Outlet />
           
           <ContactContainer>
-          <img src='/gitlogo.png' alt='logo' margin-top='10' width='25' height='25' /><StyledA href='https://github.com/ParkJaeSeong98/Literacy' target='_blank'> Github</StyledA>
+            <img src='/gitlogo.png' alt='logo' margin-top='10' width='25vw' height='25vh' />
+            <StyledA href='https://github.com/ParkJaeSeong98/Literacy' target='_blank'> Github</StyledA>
           </ContactContainer>
         </FunctionWrapper>
   
