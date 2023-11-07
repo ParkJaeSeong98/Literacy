@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyledForm, StyledInput, StyledButton, StyledModal, BaseContainer, HeadContainer, LoginContainer, Logo, HeadText, FunctionContainer, StyledLink, StyledA, FunctionWrapper, SizedBox, ContactContainer, Tooltip, ColumnContainer } from './StyledComponents.jsx';
+import { StyledForm, StyledInput, StyledButton, StyledModal, BaseContainer, HeadContainer, LoginContainer, Logo, HeadText, FunctionContainer, StyledLink, StyledA, FunctionWrapper, SizedBox, ContactContainer, Tooltip, ColumnContainer, DraggableContainerWrapper, DraggableContent } from './StyledComponents.jsx';
 
 // API 활용한 끝말잇기
 const WordRelay = () => {
@@ -276,9 +276,22 @@ const WordRelay = () => {
     }
 
     const DraggableContainer = () => {
+
+      const contentRef = useRef();
+
+      useEffect(() => {
+        // 스크롤이 항상 가장 오른쪽에 위치하도록 설정
+        contentRef.current.scrollLeft = contentRef.current.scrollWidth;
+      }, [previous]);
     
-      
-    };
+      return (
+        <DraggableContainerWrapper>
+          <DraggableContent ref={contentRef}>
+            {previous.join(' ')}
+          </DraggableContent>
+        </DraggableContainerWrapper>
+      );
+    }
   
     return (
       <>

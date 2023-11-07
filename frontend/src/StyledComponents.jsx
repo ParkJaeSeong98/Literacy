@@ -146,9 +146,33 @@ export const StyledModal = styled(Modal)`
   padding: 40px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
 `;
 
-// 드래그
+// 끝말잇기
 
 
+
+
+// 요약
+
+export const StyledTextarea = styled.textarea`
+  width: 40vw;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: none; /* 수직 리사이즈 활성화 */
+`;
+
+export const DraggableContainerWrapper = styled.div`
+  width: 100%;
+  white-space: nowrap;
+  overflow-x: scroll;
+  border: 1px solid #ccc;
+  padding: 10px;
+  display: flex;
+`;
+
+export const DraggableContent = styled.div`
+  display: inline-block;
+`;

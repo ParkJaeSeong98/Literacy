@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyledForm, StyledInput, StyledButton, StyledModal } from './StyledComponents.jsx';
+import { StyledForm, StyledInput, StyledButton, StyledModal, StyledTextarea } from './StyledComponents.jsx';
 
 const Summary = () => {
     
@@ -47,13 +47,15 @@ const Summary = () => {
         <div>
             <h1>긴글요약</h1>
 
-            {/* onSubmit 이벤트 핸들러를 추가한 폼 엘리먼트를 렌더링 */}
             <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
+                <StyledTextarea
+                    // id="userText"
+                    // name="userText"
+                    rows="10"
                     value={userInput}
                     onChange={handleInputChange}
                 />
+                <br></br>
                 <button type="submit">제출</button>
             </form>
 
