@@ -12,6 +12,8 @@
 # production
 /frontend/build
 /backend/APIkeys.env
+/firebase/literacy-633f2-firebase-adminsdk-bt8ue-172c08a271.json
+/frontend/src/config/firebaseConfig.js
 
 # misc
 /frontend/.DS_Store

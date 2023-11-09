@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyledForm, StyledInput, StyledButton, StyledModal, BaseContainer, HeadContainer, LoginContainer, Logo, HeadText, FunctionContainer, StyledLink, StyledA, FunctionWrapper, SizedBox, ContactContainer, Tooltip, ColumnContainer, DraggableContainerWrapper, DraggableContent } from './StyledComponents.jsx';
+import { getDatabase, ref, onValue } from 'firebase/database';
+// firebase.js 에서 내보낸 인스턴스
+import app from './firebase.js';
 
 // API 활용한 끝말잇기
 const WordRelay = () => {
@@ -19,11 +22,37 @@ const WordRelay = () => {
     const [wrongAnswerPool2, setWrongAnswerPool2] = useState([]); // 오답 pool 2 
     const [wrongAnswerPool3, setWrongAnswerPool3] = useState([]); // 오답 pool 3 
 
-    const [randomWord, setRandomWord] = useState(['발전', '지구', '행성']); // 임시 오답 단어 추후에 DB에서 가져와서 3 발전,지구,행성 대신 다른 단어로 무작위 하게 이 배열을 채우면 됨.
+    const [randomWord, setRandomWord] = useState([]); // 임시 오답 단어 추후에 DB에서 가져와서 3 발전,지구,행성 대신 다른 단어로 무작위 하게 이 배열을 채우면 됨.
 
     const [answers, setAnswers] = useState([]); // 답 한 곳에 모으기
 
     const [firstAnswerIndex, setFirstAnswerIndex] = useState(0); // 정답 인덱스를 관리할 상태
+
+    // firebase DB에서 단어를 가져오는 함수
+    const fetchFireBase = async () => {
+      // Firebase Realtime Database 인스턴스 가져오기
+      const db = getDatabase(app);
+
+      // 'words' 경로의 참조 가져오기
+      const wordsRef = ref(db, 'words');
+
+      // 참조에 대한 값 가져오기
+      onValue(wordsRef, (snapshot) => {
+        const data = snapshot.val();
+        // 데이터가 객체라면 배열로 변환 (예: { word1: 'apple', word2: 'banana' } => ['apple', 'banana'])
+        const wordsArray = data ? Object.values(data) : [];
+
+        // 상태 업데이트
+        setRandomWord(wordsArray); // 단어 목록에서 처음 10개만 가져오기
+      }, {
+        onlyOnce: true // 데이터가 한 번만 읽히도록 설정
+      });
+    }
+
+    // 컴포넌트가 마운트될 때 데이터베이스에서 단어 가져오기
+    useEffect(() => {
+      fetchFireBase();
+    }, []);
 
     const getJsonFromDictionaryAPI = async (query) => {
       try {
@@ -34,6 +63,7 @@ const WordRelay = () => {
         // '-' 이거 제거하고, 길이 1인거 제외
         //console.log(fetchedWords.length);
         console.log(fetchedWords);
+        console.log(randomWord);
         const setFetchedWords = new Set(fetchedWords);
         fetchedWords = [...setFetchedWords];
         //console.log(fetchedWords.length);
@@ -61,6 +91,10 @@ const WordRelay = () => {
     useEffect(() => {
       if ((meaningPool.length > 0) && (wrongAnswerPool1.length > 0) && (wrongAnswerPool2.length > 0) && (wrongAnswerPool3.length > 0)) {
 
+        console.log(wrongAnswerPool1);
+        console.log(wrongAnswerPool2);
+        console.log(wrongAnswerPool3);
+
         const secondIndex = Math.floor(Math.random() * wrongAnswerPool1.length); // 오답1 랜덤 인덱스
         const thirdIndex = Math.floor(Math.random() * wrongAnswerPool2.length); // 오답2 랜덤 인덱스
         const forthIndex = Math.floor(Math.random() * wrongAnswerPool3.length); // 오답3 랜덤 인덱스
@@ -74,6 +108,7 @@ const WordRelay = () => {
             [combinedAnswers[i], combinedAnswers[j]] = [combinedAnswers[j], combinedAnswers[i]];
         }
 
+        console.log(combinedAnswers);
         setAnswers(combinedAnswers);
       }
     }, [meaningPool, wrongAnswerPool1, wrongAnswerPool2, wrongAnswerPool3, firstAnswerIndex]);
@@ -210,14 +245,29 @@ const WordRelay = () => {
       try {
         const isReal = await isRealWord(value); // null은 false로 처리됨.
         const isUsed = !(previous.includes(value)); // previous 안에 입력한 단어가 존재하는지 판단할 변수
+        
+        // console.log(randomWord);
 
         // 정답 및 오답 뜻 넣기
         const tempMeaning = await getMeaning(value); // 정답 뜻
         setMeaningPool(tempMeaning); // meaingPool에 가져온 뜻 복사
 
-        const tempWrongAnswer1 = await getMeaning(randomWord[0]); // 오답1 뜻
-        const tempWrongAnswer2 = await getMeaning(randomWord[1]); // 오답2 뜻
-        const tempWrongAnswer3 = await getMeaning(randomWord[2]); // 오답3 뜻
+        function getThreeUniqueRandomIndexes() {
+          const indexes = new Set();
+          while (indexes.size < 3) {
+            const randomIndex = Math.floor(Math.random() * randomWord.length);
+            indexes.add(randomIndex);
+          }
+          return Array.from(indexes);
+        }
+
+        const uniqueRandomIndex = getThreeUniqueRandomIndexes();
+
+        // console.log(uniqueRandomIndex);
+
+        const tempWrongAnswer1 = await getMeaning(randomWord[uniqueRandomIndex[0]]); // 오답1 뜻
+        const tempWrongAnswer2 = await getMeaning(randomWord[uniqueRandomIndex[1]]); // 오답2 뜻
+        const tempWrongAnswer3 = await getMeaning(randomWord[uniqueRandomIndex[2]]); // 오답3 뜻
 
         setWrongAnswerPool1(tempWrongAnswer1); // wrongAnswerPool1에 가져온 오답들 뜻 복사
         setWrongAnswerPool2(tempWrongAnswer2);
