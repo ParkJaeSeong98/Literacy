@@ -22,7 +22,7 @@ const WordRelay = () => {
     const [wrongAnswerPool2, setWrongAnswerPool2] = useState([]); // 오답 pool 2 
     const [wrongAnswerPool3, setWrongAnswerPool3] = useState([]); // 오답 pool 3 
 
-    const [randomWord, setRandomWord] = useState([]); // 임시 오답 단어 추후에 DB에서 가져와서 3 발전,지구,행성 대신 다른 단어로 무작위 하게 이 배열을 채우면 됨.
+    const [randomWord, setRandomWord] = useState([]); // 임시 오답 단어 
 
     const [answers, setAnswers] = useState([]); // 답 한 곳에 모으기
 
