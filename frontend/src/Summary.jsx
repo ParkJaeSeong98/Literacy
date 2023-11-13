@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyledForm, StyledInput, StyledButton, StyledModal, StyledTextarea } from './StyledComponents.jsx';
+import { StyledTextarea } from './StyledComponents.jsx';
 import { getDatabase, ref, onValue } from 'firebase/database';
 
 import app from './firebase.js'; // firebase.js 에서 내보낸 인스턴스
@@ -12,13 +12,15 @@ const Summary = () => {
     const [submittedInput, setSubmittedInput] = useState('');
 
     const [article, setArticle] = useState(''); // 기사를 저장할 상태 변수
-    const [isLoading, setIsLoading] = useState(true); // 데이터 로딩 상태를 추적하는 상태 변수
+    const [isArticleLoading, setIsArticleLoading] = useState(false); // 데이터 로딩 상태를 추적하는 상태 변수 (기사 가져올 때 로더)
+    const [isGPTLoading, setIsGPTLoading] = useState(false); // GPT 답변 로더
 
     const [currentArticleKey, setCurrentArticleKey] = useState(0); // 현재 보고 있는 기사의 키
     const maxArticleKey = 4; // 기사 키의 최대값
 
+    // currentArticleKey 값이 변하면(다음 또는 이전 버튼 클릭 시) DB에서 데이터 가져오도록 함
     useEffect(() => {
-        setIsLoading(true); // 데이터 로딩 시작
+        setIsArticleLoading(true); // 데이터 로딩 시작
         const db = getDatabase(app);
         const articleRef = ref(db, `articles/society/${currentArticleKey}`); // 동적으로 키를 업데이트
 
@@ -26,10 +28,10 @@ const Summary = () => {
         const unsubscribe = onValue(articleRef, (snapshot) => {
             const data = snapshot.val();
             setArticle(data);
-            setIsLoading(false);
-        }, (error) => {
+            setIsArticleLoading(false); // 로딩 완료
+        }, (error) => { 
             console.error(error);
-            setIsLoading(false);
+            setIsArticleLoading(false); // 로딩 완료
         });
 
         // cleanup function에서는 반환된 함수를 호출
@@ -50,11 +52,9 @@ const Summary = () => {
             const data = await response.json();
             
             console.log(data);
-
             const messageContent = data[0].message.content;
-
             console.log(messageContent);
-    
+
             return messageContent;
           } catch (error) {
             console.error("Error fetching data:", error);
@@ -68,6 +68,8 @@ const Summary = () => {
     const handleSubmit = async (input) => {
         input.preventDefault(); // 폼이 실제로 제출되는 것을 방지
 
+        setIsGPTLoading(true); // gpt 답변 로더 켜기
+
         setSubmittedInput(userInput); // 사용자 입력을 저장함.
     
         const format = "ChatGPT가 요약한 내용: (네가 요약한 내용), 사용자가 요약한 내용: (사용자 요약본의 원본), 사용자 요약본 평가: (사용자 요약본에서 원본 글의 사실과 다른 점)";
@@ -80,7 +82,16 @@ const Summary = () => {
 
         const output = await talkToGPT(prompt); // GPT로부터 받은 응답
 
+        setIsGPTLoading(false); // gpt 응답 전에 로더 표시 끄기
         setGptOutput(output);
+
+        if (gptOutput.includes('\n')) {
+            console.log(gptOutput);
+            console.log('GPT output contains newline characters');
+        } else {
+            console.log(gptOutput);
+            console.log(`GPT output don't contain newline characters`);
+        }
     };
 
     // '다음' 버튼 핸들러
@@ -101,7 +112,7 @@ const Summary = () => {
         <div>
             <h1>글 내용</h1>
             {/* 로딩 인디케이터를 조건부 렌더링 */}
-            {isLoading ? (
+            {isArticleLoading ? (
                 <TailSpin
                 color="#00BFFF" // 로더의 색상
                 height={100} // 로더의 높이
@@ -131,7 +142,15 @@ const Summary = () => {
             </form>
 
             {/* gpt output */}
-            {gptOutput && <p>{gptOutput}</p>}
+            {isGPTLoading ? (
+                <TailSpin
+                color="#00BFFF" // 로더의 색상
+                height={100} // 로더의 높이
+                width={100} // 로더의 너비
+                />
+            ) : (
+                <div>{gptOutput}</div>
+            )}
             
         </div>
     );
