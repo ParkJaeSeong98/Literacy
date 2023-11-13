@@ -6,7 +6,7 @@ import app from './firebase.js';
 
 // API 활용한 끝말잇기
 const WordRelay = () => {
-    const [word, setWord] = useState('남자');
+    const [word, setWord] = useState('');
     const [value, setValue] = useState('');
     const [result, setResult] = useState('');
     const [words, setWords] = useState([]);
@@ -48,6 +48,15 @@ const WordRelay = () => {
         onlyOnce: true // 데이터가 한 번만 읽히도록 설정
       });
     }
+
+    useEffect(() => {
+      if (randomWord.length > 0) {
+        const randIndex = Math.floor(Math.random() * randomWord.length);
+        setWord(randomWord[randIndex]);
+        setPrevious([randomWord[randIndex]]);
+      }
+    }, [randomWord]);
+    
 
     // 컴포넌트가 마운트될 때 데이터베이스에서 단어 가져오기
     useEffect(() => {
@@ -359,11 +368,6 @@ const WordRelay = () => {
           
         </ColumnContainer>
 
-
-
-        {/* <div>제시 단어: {word}</div>
-        <div>사용했던 단어 목록: {previous}</div> */}
-
         <StyledForm onSubmit={onSubmitForm}>
           <StyledInput
             ref={inputEl}
@@ -376,7 +380,7 @@ const WordRelay = () => {
           <h2>{previous[previous.length - 2]}의 뜻을 고르세요!</h2>
           <MultipleChoiceQuestion></MultipleChoiceQuestion>
         </StyledModal>
-        <div>{result}</div>
+
       </>
     );
   }
