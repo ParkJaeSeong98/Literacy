@@ -6,7 +6,7 @@ import app from './firebase.js'; // firebase.js 에서 내보낸 인스턴스
 import { TailSpin } from 'react-loader-spinner'; // 기사 가져오는 동안 사용할 로딩 상태 표시
 
 const Summary = () => {
-    
+
     const [userInput, setUserInput] = useState('');
     const [gptOutput, setGptOutput] = useState('');
     const [submittedInput, setSubmittedInput] = useState('');
@@ -16,13 +16,13 @@ const Summary = () => {
 
     const [currentArticleKey, setCurrentArticleKey] = useState(0); // 현재 보고 있는 기사의 키
     const maxArticleKey = 4; // 기사 키의 최대값
-    
+
     useEffect(() => {
         setIsLoading(true); // 데이터 로딩 시작
         const db = getDatabase(app);
         const articleRef = ref(db, `articles/society/${currentArticleKey}`); // 동적으로 키를 업데이트
 
-        // onValue는 이벤트 리스너 해제를 위한 함수를 반환합니다.
+        // onValue는 이벤트 리스너 해제를 위한 함수를 반환
         const unsubscribe = onValue(articleRef, (snapshot) => {
             const data = snapshot.val();
             setArticle(data);
@@ -32,7 +32,7 @@ const Summary = () => {
             setIsLoading(false);
         });
 
-        // cleanup function에서는 반환된 함수를 호출합니다.
+        // cleanup function에서는 반환된 함수를 호출
         return () => {
             unsubscribe(); // 리스너 해제
         };
@@ -53,7 +53,7 @@ const Summary = () => {
 
             const messageContent = data[0].message.content;
 
-            console.log(messageContent)
+            console.log(messageContent);
     
             return messageContent;
           } catch (error) {
@@ -64,14 +64,23 @@ const Summary = () => {
     }
 
     // 사용자가 엔터를 누르거나 버튼을 클릭할 때 호출되는 함수
+    // 이 함수에서 input을 넘겨줄 때, 사용자 인풋을 가지고 프롬프트를 바꿔서 gpt에게 전달한다.
     const handleSubmit = async (input) => {
         input.preventDefault(); // 폼이 실제로 제출되는 것을 방지
 
-        setSubmittedInput(userInput); // 사용자 입력을 저장합니다.
+        setSubmittedInput(userInput); // 사용자 입력을 저장함.
     
-        const output = await talkToGPT(userInput); // GPT로부터 응답을 받습니다.
+        const format = "ChatGPT가 요약한 내용: (네가 요약한 내용), 사용자가 요약한 내용: (사용자 요약본의 원본), 사용자 요약본 평가: (사용자 요약본에서 원본 글의 사실과 다른 점)";
 
-        setGptOutput(output);        
+        const prompt = `내가 준 "원본 글"을 요약하고, "사용자 요약본"과 비교해서 다음과 같은 "양식"으로 
+        답변해줘. 양식: ${format}, 원본 글: ${article} 사용자 요약본 ${userInput}`;
+
+        console.log(prompt);
+        console.log(userInput);
+
+        const output = await talkToGPT(prompt); // GPT로부터 받은 응답
+
+        setGptOutput(output);
     };
 
     // '다음' 버튼 핸들러
@@ -113,8 +122,6 @@ const Summary = () => {
             {/* 사용자 입력창 */}
             <form onSubmit={handleSubmit}>
                 <StyledTextarea
-                    // id="userText"
-                    // name="userText"
                     rows="10"
                     value={userInput}
                     onChange={handleInputChange}
@@ -123,7 +130,7 @@ const Summary = () => {
                 <button type="submit">제출</button>
             </form>
 
-            {/*gpt output*/}
+            {/* gpt output */}
             {gptOutput && <p>{gptOutput}</p>}
             
         </div>

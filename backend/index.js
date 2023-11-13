@@ -56,7 +56,7 @@ async function getChatGPTMessage(query, res) {
   try {
     const chatCompletion = await openai.chat.completions.create({
       messages: [{ role: 'user', content: query }],
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4',
     }); // openai API로 답변 받아서 chatCompletion에 저장
 
     console.log(chatCompletion.choices); // 콘솔로 출력해보기
