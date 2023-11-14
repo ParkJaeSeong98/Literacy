@@ -2,6 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { StyledForm, StyledInput, StyledButton, StyledModal, BaseContainer, HeadContainer, LoginContainer, Logo, HeadText, FunctionContainer, StyledLink, StyledA, FunctionWrapper, SizedBox, ContactContainer, Tooltip, ColumnContainer, StyledModalButton
 , StyledList, StyledListItem, PreviousContainer, ModalButton, SubmitButton, UpdateButton, ButtonContainer } from './StyledComponents.jsx';
 import { getDatabase, ref, onValue } from 'firebase/database';
+
+import { TailSpin } from 'react-loader-spinner'; // 기사 가져오는 동안 사용할 로딩 상태 표시
+
 // firebase.js 에서 내보낸 인스턴스
 import app from './firebase.js';
 
@@ -28,6 +31,9 @@ const WordRelay = () => {
     const [answers, setAnswers] = useState([]); // 답 한 곳에 모으기
 
     const [firstAnswerIndex, setFirstAnswerIndex] = useState(0); // 정답 인덱스를 관리할 상태
+
+    const [isAnswerLoading, setIsAnswerLoading] = useState(false); // 답안 가져오는 로더
+
 
     // firebase DB에서 단어를 가져오는 함수
     const fetchFireBase = async () => {
@@ -64,6 +70,7 @@ const WordRelay = () => {
       fetchFireBase();
     }, []);
 
+    // 끝 자로 시작하는 단어 가져오기
     const getJsonFromDictionaryAPI = async (query) => {
       try {
         const response = await fetch(`http://localhost:3000/api/search?q=${query}&method=start&target=1`);
@@ -276,6 +283,8 @@ const WordRelay = () => {
     
     // 사용자가 입력한 단어에 대한 처리를 담당하는 함수
     const onSubmitForm = async (e) => {
+      setIsAnswerLoading(true); // 로딩 시작
+
       e.preventDefault();
   
       try {
@@ -311,6 +320,7 @@ const WordRelay = () => {
       
 
         if ((convertDueum(word[word.length - 1]) === value[0]) && (isReal) && (isUsed) && (value.length > 1))  {
+          
           await getJsonFromDictionaryAPI(convertDueum(value[value.length - 1]));
           setResult('딩동댕');
           setPrevious(previous => [...previous, value]);
@@ -319,16 +329,20 @@ const WordRelay = () => {
   
           // 모달 팝업
           setModalIsOpen(true);
+
+          setIsAnswerLoading(false); // 로딩 끝
   
         } else {
           if (isReal === null) {
             setResult('죄송합니다. 다시 시도해주세요.');
             setValue('');
             inputEl.current.focus();
+            setIsAnswerLoading(false); // 로딩 끝
           } else {
             setResult('땡');
             setValue('');
             inputEl.current.focus();
+            setIsAnswerLoading(false); // 로딩 끝
           }
         }
   
@@ -337,6 +351,7 @@ const WordRelay = () => {
         setResult('죄송합니다. 다시 시도해주세요.');
         setValue('');
         inputEl.current.focus();
+        setIsAnswerLoading(false); // 로딩 끝
       }
       
     };
@@ -390,7 +405,16 @@ const WordRelay = () => {
 
           <DraggableContainer></DraggableContainer>
           <SizedBox size='1.5vh'></SizedBox>
-          <HeadText size='8vh'>{result}</HeadText>
+
+          {isAnswerLoading ? (
+              <TailSpin
+              color="#00BFFF" // 로더의 색상
+              height={100} // 로더의 높이
+              width={100} // 로더의 너비
+              />
+          ) : (
+            <HeadText size='8vh'>{result}</HeadText>
+          )}
           
         </ColumnContainer>
 

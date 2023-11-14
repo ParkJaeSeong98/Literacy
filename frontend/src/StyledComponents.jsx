@@ -233,6 +233,7 @@ export const StyledTextarea = styled.textarea`
 export const SummaryContainer = styled.div`
   display: flex;
   height: 80vh;
+  white-space: pre-line
 `;
 
 export const LeftContainer = styled.div`

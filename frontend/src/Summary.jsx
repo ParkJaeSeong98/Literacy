@@ -6,7 +6,6 @@ import app from './firebase.js'; // firebase.js 에서 내보낸 인스턴스
 import { TailSpin } from 'react-loader-spinner'; // 기사 가져오는 동안 사용할 로딩 상태 표시
 
 const Summary = () => {
-
     const [userInput, setUserInput] = useState('');
     const [gptOutput, setGptOutput] = useState('');
     const [submittedInput, setSubmittedInput] = useState('');
@@ -27,7 +26,10 @@ const Summary = () => {
         // onValue는 이벤트 리스너 해제를 위한 함수를 반환
         const unsubscribe = onValue(articleRef, (snapshot) => {
             const data = snapshot.val();
-            setArticle(data);
+            console.log("data:\n"+data);
+            const formattedData = data.replace(/\\n/g, "\n");
+            console.log("수정된 데이터:\n" + formattedData);
+            setArticle(formattedData);
             setIsArticleLoading(false); // 로딩 완료
         }, (error) => { 
             console.error(error);
@@ -120,7 +122,7 @@ const Summary = () => {
                 width={100} // 로더의 너비
                 />
             ) : (
-                <div> {article && <p>{article}</p>} </div>
+                <div>{article}</div>
             )}
 
             {/* 기사 네비게이션 버튼 */}
@@ -159,7 +161,7 @@ const Summary = () => {
                     <div>{gptOutput}</div>
                 )}
             </BottomRightContainer>    
-          </RightContainer>    
+          </RightContainer>
         </SummaryContainer>
     );
 
