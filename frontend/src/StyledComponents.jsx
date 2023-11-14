@@ -9,6 +9,7 @@ export const BaseContainer = styled.div`
   width: 100vw; 
   height: 100vh; 
   background-color: #D2B48C;  
+  overflow: auto;
 `;
 
 export const HeadContainer = styled.div`       
