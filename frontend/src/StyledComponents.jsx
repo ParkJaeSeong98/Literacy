@@ -229,3 +229,29 @@ export const StyledTextarea = styled.textarea`
   border-radius: 4px;
   resize: none; /* 수직 리사이즈 활성화 */
 `;
+
+export const SummaryContainer = styled.div`
+  display: flex;
+  height: 80vh;
+`;
+
+export const LeftContainer = styled.div`
+  flex: 1;
+  padding: 20px;
+`;
+
+export const RightContainer = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const TopRightContainer = styled.div`
+  flex: 2;
+  margin-bottom: 10px;
+`;
+
+export const BottomRightContainer = styled.div`
+  flex: 3;
+  background-color: #d0d0d0;
+`;

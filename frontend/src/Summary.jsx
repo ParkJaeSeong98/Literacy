@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyledTextarea } from './StyledComponents.jsx';
+import { StyledTextarea, SummaryContainer, RightContainer, LeftContainer, TopRightContainer, BottomRightContainer } from './StyledComponents.jsx';
 import { getDatabase, ref, onValue } from 'firebase/database';
 
 import app from './firebase.js'; // firebase.js 에서 내보낸 인스턴스
@@ -109,7 +109,8 @@ const Summary = () => {
     };
 
     return (
-        <div>
+        <SummaryContainer>
+          <LeftContainer>
             <h1>글 내용</h1>
             {/* 로딩 인디케이터를 조건부 렌더링 */}
             {isArticleLoading ? (
@@ -129,30 +130,37 @@ const Summary = () => {
             <button onClick={handleNext} disabled={currentArticleKey === maxArticleKey}>
                 다음
             </button>
+          </LeftContainer>
+          <RightContainer>
 
+            <TopRightContainer>
             {/* 사용자 입력창 */}
-            <form onSubmit={handleSubmit}>
-                <StyledTextarea
-                    rows="10"
-                    value={userInput}
-                    onChange={handleInputChange}
-                />
-                <br></br>
-                <button type="submit">제출</button>
-            </form>
+                <form onSubmit={handleSubmit}>
+                    <StyledTextarea
+                        rows="10"
+                        value={userInput}
+                        onChange={handleInputChange}
+                    />
+                    <br></br>
+                    <button type="submit">제출</button>
+                </form>
+            </TopRightContainer>
 
-            {/* gpt output */}
-            {isGPTLoading ? (
-                <TailSpin
-                color="#00BFFF" // 로더의 색상
-                height={100} // 로더의 높이
-                width={100} // 로더의 너비
-                />
-            ) : (
-                <div>{gptOutput}</div>
-            )}
-            
-        </div>
+            <BottomRightContainer>
+
+                {/* gpt output */}
+                {isGPTLoading ? (
+                    <TailSpin
+                    color="#00BFFF" // 로더의 색상
+                    height={100} // 로더의 높이
+                    width={100} // 로더의 너비
+                    />
+                ) : (
+                    <div>{gptOutput}</div>
+                )}
+            </BottomRightContainer>    
+          </RightContainer>    
+        </SummaryContainer>
     );
 
 }
