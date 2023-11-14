@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyledForm, StyledInput, StyledButton, StyledModal, BaseContainer, HeadContainer, LoginContainer, Logo, HeadText, FunctionContainer, StyledLink, StyledA, FunctionWrapper, SizedBox, ContactContainer, Tooltip, ColumnContainer, DraggableContainerWrapper, DraggableContent } from './StyledComponents.jsx';
+import { StyledForm, StyledInput, StyledButton, StyledModal, BaseContainer, HeadContainer, LoginContainer, Logo, HeadText, FunctionContainer, StyledLink, StyledA, FunctionWrapper, SizedBox, ContactContainer, Tooltip, ColumnContainer, StyledModalButton
+, StyledList, StyledListItem, PreviousContainer, ModalButton, SubmitButton, UpdateButton, ButtonContainer } from './StyledComponents.jsx';
 import { getDatabase, ref, onValue } from 'firebase/database';
 // firebase.js 에서 내보낸 인스턴스
 import app from './firebase.js';
@@ -210,16 +211,33 @@ const WordRelay = () => {
     function MultipleChoiceQuestion() {
       const [selectedAnswer, setSelectedAnswer] = useState('');
       const [result, setResult] = useState('');
+
+      const [answerModalVisible, setAnswerModalVisible] = useState(false);
+
+      const closeAnswerModal = () => {
+        setAnswerModalVisible(false);
+      };
+    
+      const handleAnswerButtonClick = () => {
+        setAnswerModalVisible(true);
+    
+        // 1초 후에 정답 모달을 자동으로 닫음
+        setTimeout(() => {
+          closeAnswerModal();
+        }, 1500);
+      };
       
       const choices = answers;
 
       const handleAnswerSubmit = () => {
         if (selectedAnswer === meaningPool[firstAnswerIndex]) {
           setResult('정답입니다!');
+          handleAnswerButtonClick();
           setFirstAnswerIndex(0); // 인덱스 초기화
           setModalIsOpen(false);
         } else {
           setResult('틀렸습니다. 다시 시도하세요.');
+          handleAnswerButtonClick();
         }
       };
     
@@ -235,14 +253,23 @@ const WordRelay = () => {
                   checked={selectedAnswer === answer}
                   onChange={() => setSelectedAnswer(answer)}
                 />
-                {answer}
+                 {answer}
+                <br></br>
               </label>
               <br />
             </div>
           ))}
-          <button onClick={handleAnswerSubmit}>제출</button>
-          <button onClick={updateAnswerChoices} disabled={firstAnswerIndex === meaningPool.length - 1}>업데이트</button>
-          <p>{result}</p>
+          <ButtonContainer>
+            <SubmitButton onClick={handleAnswerSubmit}>제출</SubmitButton>
+            <UpdateButton onClick={updateAnswerChoices} disabled={firstAnswerIndex === meaningPool.length - 1}>업데이트</UpdateButton>
+          </ButtonContainer>
+      
+          <StyledModal
+          isOpen={answerModalVisible}
+          onRequestClose={() => setAnswerModalVisible(false)}
+          shouldCloseOnEsc={false} // ESC 키로 닫기 비활성화
+          shouldCloseOnOverlayClick={false} // 모달 외부 클릭으로 닫기 비활성화
+          >{result}</StyledModal>
         </div>
       );
     }
@@ -324,31 +351,29 @@ const WordRelay = () => {
           shouldCloseOnOverlayClick={false} // 모달 외부 클릭으로 닫기 비활성화
         >
           <h2>끝말잇기 규칙</h2>
-          <ul>
-            <li>사전에 등재된 명사만 사용할 수 있어요.</li>
-            <li>두음법칙 반드시 적용시켜야 해요.</li>
-            <li>이미 사용한 단어와 한 글자 단어는 사용할 수 없어요.</li>
-          </ul>
-          <button onClick={() => setRModalIsOpen(false)}>확인</button>
+          <SizedBox size='4vh'></SizedBox>
+          <StyledList>
+            <StyledListItem>1. 사전에 등재된 명사만 사용할 수 있어요.</StyledListItem>
+            <br></br>
+            <StyledListItem>2. 두음법칙을 반드시 적용시켜야 해요.</StyledListItem>
+            <br></br>
+            <StyledListItem>3. 이미 사용한 단어와 한 글자 단어는 사용할 수 없어요.</StyledListItem>
+          </StyledList>
+          <StyledModalButton onClick={() => setRModalIsOpen(false)}>알겠어요!</StyledModalButton>
         </StyledModal>
       );
     }
 
     const DraggableContainer = () => {
-
-      const contentRef = useRef();
-
+      
       useEffect(() => {
-        // 스크롤이 항상 가장 오른쪽에 위치하도록 설정
-        contentRef.current.scrollLeft = contentRef.current.scrollWidth;
+        console.log(1);
       }, [previous]);
     
       return (
-        <DraggableContainerWrapper>
-          <DraggableContent ref={contentRef}>
-            {previous.join(' ')}
-          </DraggableContent>
-        </DraggableContainerWrapper>
+        <PreviousContainer>
+          {previous.map((word) => ( word + ' ' ))}
+       </PreviousContainer>
       );
     }
   
@@ -358,13 +383,14 @@ const WordRelay = () => {
 
         <SizedBox size='1.5vh'></SizedBox>
         <ColumnContainer>
-          <HeadText size='8vh'>제시 단어</HeadText>
-          <SizedBox></SizedBox>
-          <HeadText size='8vh'>" {word} "</HeadText>
+          <HeadText size='4vh'>제시 단어</HeadText>
+          <SizedBox size='2vh'></SizedBox>
+          <HeadText size='10vh'>" {word} "</HeadText>
           <SizedBox size='1.5vh'></SizedBox>
-          <HeadText size='8vh'>{result}</HeadText>
 
           <DraggableContainer></DraggableContainer>
+          <SizedBox size='1.5vh'></SizedBox>
+          <HeadText size='8vh'>{result}</HeadText>
           
         </ColumnContainer>
 
@@ -376,8 +402,9 @@ const WordRelay = () => {
           />
           <StyledButton>입력!</StyledButton>
         </StyledForm>
-        <StyledModal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} shouldCloseOnEsc={false} shouldCloseOnOverlayClick={false}>
-          <h2>{previous[previous.length - 2]}의 뜻을 고르세요!</h2>
+
+        <StyledModal size='40vw' isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} shouldCloseOnEsc={false} shouldCloseOnOverlayClick={false}>
+          <h2>"{previous[previous.length - 2]}"의 뜻을 고르세요!</h2>
           <MultipleChoiceQuestion></MultipleChoiceQuestion>
         </StyledModal>
 

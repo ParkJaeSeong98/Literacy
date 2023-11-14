@@ -137,21 +137,86 @@ export const StyledButton = styled.button`
 `;
 
 export const StyledModal = styled(Modal)`
+  //text-align: center;
   font-family: 'logofont';
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background: #fff;
-  width: 600px;
+  width: ${props => props.size || '30vw'};
   padding: 40px;
+  padding-top: 30px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
 `;
 
 // 끝말잇기
 
+export const StyledModalButton = styled.button`
+  font-family: 'logofont';
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+`;
+
+export const StyledList = styled.ul`
+  list-style-type: none;
+  padding: 0;
+`;
+
+export const StyledListItem = styled.li`
+  margin-left: -15px; /* 원하는 만큼 좌측으로 밀착시킵니다. */
+  padding-left: 15px; /* 여백을 주기 위한 값입니다. */
+`;
+
+export const PreviousContainer = styled.div`
+  font-family: 'previous';
+  font-size: 5vh;
+  width: 60vw;
+  border: 4px solid;
+  padding: 20px;
+`;
+
+// 선지선택 모달
+
+export const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const ModalButton = styled.button`
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  margin-right: 10px;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+
+  &:disabled {
+    cursor: not-allowed;
+    background-color: #ccc;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: #7d7272;
+    color: white;
+  }
+`;
+
+export const SubmitButton = styled(ModalButton)`
+  background-color: #444;
+  color: white;
+`;
+
+export const UpdateButton = styled(ModalButton)`
+  background-color: #444;
+  color: white;
+`;
 
 
 
@@ -163,17 +228,4 @@ export const StyledTextarea = styled.textarea`
   border: 1px solid #ccc;
   border-radius: 4px;
   resize: none; /* 수직 리사이즈 활성화 */
-`;
-
-export const DraggableContainerWrapper = styled.div`
-  width: 100%;
-  white-space: nowrap;
-  overflow-x: scroll;
-  border: 1px solid #ccc;
-  padding: 10px;
-  display: flex;
-`;
-
-export const DraggableContent = styled.div`
-  display: inline-block;
 `;

@@ -2,3 +2,8 @@
     font-family: 'logofont'; /* 로고 폰트의 이름 지정 */
     src: url('../fonts/logofont.ttf') format('truetype'); /* 로고 폰트 파일의 경로 수정 */
   }
+
+@font-face {
+  font-family: 'previous'; /* 로고 폰트의 이름 지정 */
+  src: url('../fonts/LeeSeoyun.otf') format('truetype'); /* 로고 폰트 파일의 경로 수정 */
+}  
