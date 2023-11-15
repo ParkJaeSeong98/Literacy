@@ -112,28 +112,43 @@ export const ColumnContainer = styled.div`
 `;
 
 export const StyledForm = styled.form`
+  margin-top: 5vh;
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
 
 export const StyledInput = styled.input`
-  padding: 8px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  font-family: 'previous';
+  font-size: 3.5vh;
+  padding: 2vh;
+  margin-bottom: 0.5vh;
+  border: 4px solid #000; /* 검정 테두리 추가 */
   outline: none;
   text-align: center;
+  background-color: #D2B48C;
 `;
 
 export const StyledButton = styled.button`
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
-  cursor: pointer;
-  outline: none;
+font-family: 'logofont';
+padding: 10px 20px;
+background-color: #ffffff;
+color: #333;
+border: 2px solid #333;
+border-radius: 12px;
+cursor: pointer;
+transition: background-color 0.3s, color 0.3s, border-color 0.3s; /* 트랜지션 추가 */
+
+&:hover {
+  background-color: #333;
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+&:active {
+  background-color: #1a1a1a;
+  border-color: #1a1a1a;
+}
 `;
 
 export const StyledModal = styled(Modal)`
@@ -176,8 +191,40 @@ export const PreviousContainer = styled.div`
   font-family: 'previous';
   font-size: 5vh;
   width: 60vw;
+  height: 6vh; /* 높이 고정 */
   border: 4px solid;
-  padding: 20px;
+  padding: 30px;
+  white-space: nowrap; /* 추가된 부분 */
+  //overflow: auto;
+  overflow: hidden; /* 스크롤바 감춤 */
+  position: relative;
+
+  &::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  &:hover {
+    &::-webkit-scrollbar-thumb {
+      background-color: #555; /* 스크롤에 hover 시 thumb 색상 변경 */
+    }
+
+    cursor: grab; /* 스크롤 위에 hover 시 grab 커서로 변경 */
+  }
+
+  &:active {
+    cursor: grabbing; /* 스크롤 위에 active 시 grabbing 커서로 변경 */
+  }
 `;
 
 // 선지선택 모달

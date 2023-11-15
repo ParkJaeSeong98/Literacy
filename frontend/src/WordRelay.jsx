@@ -3,7 +3,7 @@ import { StyledForm, StyledInput, StyledButton, StyledModal, BaseContainer, Head
 , StyledList, StyledListItem, PreviousContainer, ModalButton, SubmitButton, UpdateButton, ButtonContainer } from './StyledComponents.jsx';
 import { getDatabase, ref, onValue } from 'firebase/database';
 
-import { TailSpin } from 'react-loader-spinner'; // 기사 가져오는 동안 사용할 로딩 상태 표시
+import { TailSpin, ProgressBar } from 'react-loader-spinner'; // 기사 가져오는 동안 사용할 로딩 상태 표시
 
 // firebase.js 에서 내보낸 인스턴스
 import app from './firebase.js';
@@ -407,23 +407,27 @@ const WordRelay = () => {
           <SizedBox size='1.5vh'></SizedBox>
 
           {isAnswerLoading ? (
-              <TailSpin
+              <ProgressBar
               color="#00BFFF" // 로더의 색상
-              height={100} // 로더의 높이
-              width={100} // 로더의 너비
+              height='10vh' // 로더의 높이
+              width='30vw' // 로더의 너비
+              borderColor='#6d5c78'
+              barColor ='#e7edd8'
               />
           ) : (
-            <HeadText size='8vh'>{result}</HeadText>
+            <HeadText size='8vh'>{result}<br></br></HeadText>
           )}
           
         </ColumnContainer>
 
+        
         <StyledForm onSubmit={onSubmitForm}>
           <StyledInput
             ref={inputEl}
             value={value}
             onChange={(e) => setValue(e.currentTarget.value)}
           />
+          <SizedBox size='3vh'></SizedBox>  
           <StyledButton>입력!</StyledButton>
         </StyledForm>
 

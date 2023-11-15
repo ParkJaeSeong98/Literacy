@@ -1,8 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
+import { BottomRightContainer, LeftContainer, RightContainer, SummaryContainer, TopRightContainer } from './StyledComponents.jsx';
 
 const PictureBook = () => {
-    return <h1>기능2</h1>;
+    return (
+    <SummaryContainer>       
+      <LeftContainer>사진</LeftContainer>
+
+      <RightContainer>
+        <TopRightContainer>입력</TopRightContainer>
+        <BottomRightContainer>결과</BottomRightContainer>
+      </RightContainer>  
+    </SummaryContainer>
+    );
 }
 
 export default PictureBook;
