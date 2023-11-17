@@ -10,12 +10,41 @@ const Summary = () => {
     const [gptOutput, setGptOutput] = useState('');
     const [submittedInput, setSubmittedInput] = useState('');
 
+    const [showSentences, setShowSentences] = useState(false);
+
     const [article, setArticle] = useState(''); // 기사를 저장할 상태 변수
+    const [articleSentence, setArticleSentence] = useState([]); // 기사를 문장별로 저장
     const [isArticleLoading, setIsArticleLoading] = useState(false); // 데이터 로딩 상태를 추적하는 상태 변수 (기사 가져올 때 로더)
     const [isGPTLoading, setIsGPTLoading] = useState(false); // GPT 답변 로더
 
     const [currentArticleKey, setCurrentArticleKey] = useState(0); // 현재 보고 있는 기사의 키
     const maxArticleKey = 4; // 기사 키의 최대값
+
+    // gpt로부터 보낸 input에 대한 output을 받을 함수
+    const talkToGPT = async (input, tpt, mxt) => { //input: 프롬프트, tpt: 온도, mxt: max_tokens
+        try {
+            const encodedInput = encodeURIComponent(input);
+            const encodedTpt = encodeURIComponent(tpt);
+            const encodedMxt = encodeURIComponent(mxt);
+
+            const response = await fetch(`http://localhost:3000/api/gpt?q=${encodedInput}&${encodedTpt}&${encodedMxt}`);
+            const data = await response.json();
+            
+            console.log(input);
+            console.log(data);
+            const messageContent = data[0].message.content;
+            console.log(messageContent);
+
+            setIsGPTLoading(false); // gpt 응답 전에 로더 표시 끄기
+
+            return messageContent;
+          } catch (error) {
+            console.error("Error fetching data:", error);
+            setIsGPTLoading(false); // gpt 응답 전에 로더 표시 끄기
+            throw error;
+          }
+            
+    }    
 
     // currentArticleKey 값이 변하면(다음 또는 이전 버튼 클릭 시) DB에서 데이터 가져오도록 함
     useEffect(() => {
@@ -27,7 +56,13 @@ const Summary = () => {
         const unsubscribe = onValue(articleRef, (snapshot) => {
             const data = snapshot.val();
             // console.log("data:\n"+data);
-            const formattedData = data.replace(/\\n/g, "\n");
+            const newlinedData = data.replace(/\\n/g, "\n"); // 일단 줄바꿈 적용
+
+            const sentences = newlinedData.split(/\\e/g).map(sentence => sentence.trim()).filter(sentence => sentence.length > 0);
+            setArticleSentence(sentences); // 기사 문장별로 저장
+
+            const formattedData = newlinedData.replace(/\\e/g, ""); // \e 다 없애고 형식화
+
             // console.log("수정된 데이터:\n" + formattedData);
             setArticle(formattedData);
             setIsArticleLoading(false); // 로딩 완료
@@ -46,29 +81,6 @@ const Summary = () => {
     const handleInputChange = (event) => {
         setUserText(event.target.value);
     };
-
-    // gpt로부터 보낸 input에 대한 output을 받을 함수
-    const talkToGPT = async (input) => {
-        try {
-            const encodedInput = encodeURIComponent(input);
-            const response = await fetch(`http://localhost:3000/api/gpt?q=${encodedInput}`);
-            const data = await response.json();
-            
-            console.log(input);
-            console.log(data);
-            const messageContent = data[0].message.content;
-            console.log(messageContent);
-
-            setIsGPTLoading(false); // gpt 응답 전에 로더 표시 끄기
-
-            return messageContent;
-          } catch (error) {
-            console.error("Error fetching data:", error);
-            setIsGPTLoading(false); // gpt 응답 전에 로더 표시 끄기
-            throw error;
-          }
-            
-    }
 
     // 사용자가 엔터를 누르거나 버튼을 클릭할 때 호출되는 함수
     // 이 함수에서 input을 넘겨줄 때, 사용자 인풋을 가지고 프롬프트를 구성하여 gpt에게 전달한다.
@@ -116,11 +128,18 @@ const Summary = () => {
         
         사용자 요약본:${userText}`;
 
-        const GPTText = await talkToGPT(prompt); // GPT로부터 받은 응답
-
-        console.log(GPTText);
-
-        setGptOutput(GPTText);
+        try {
+            const GPTText = await talkToGPT(prompt, 0.3, 4095); // GPT로부터 받은 응답
+            
+            // 쉬운 표현으로 바뀐 문장을 UI에 표시하는 로직 추가
+            console.log(GPTText); // 콘솔에 출력하거나 UI에 표시
+            setGptOutput(GPTText);
+            setIsGPTLoading(false); // GPT 응답 로딩 완료
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            setIsGPTLoading(false); // GPT 응답 로딩 완료
+        }
+        
     };
 
     // '다음' 버튼 핸들러
@@ -137,6 +156,50 @@ const Summary = () => {
         }
     };
 
+    const handleMagnifierClick = () => {
+        setShowSentences(!showSentences);
+    };
+
+    const handleSentenceClick = async (sentence) => {
+        setIsGPTLoading(true); // GPT 응답 로딩 시작
+
+        const prompt = `사용자는 원래 문장이 어렵다고 느끼는 사람이다.
+
+        해야 할 작업은 다음과 같다:
+        1. 원래 문장을 읽고 더 쉬운 문장으로 대체하라.
+        2. 원래 문장이 어려울 수 있는 이유를 존댓말로 간략하게 설명하라.
+        
+        원래 문장을 더 쉬운 문장으로 만들 때는 다음과 같은 사항을 지켜야 한다:
+        1. 어려운 어휘는 단순한 어휘로 대체한다. 단, 불필요하게 많은 단어를 쉽게 대체해선 안된다.
+        2. 복잡한 문장 구조라면, 짧고 간결한 여러 문장으로 나눈다.
+        3. 수동태보다는 능동태를 선호하라.
+        4. 복잡한 부사절이나 조건절을 피하라.
+        
+        답변의 예시는 다음과 같다:
+        더 쉬운 문장: [더 쉬운 문장]
+        
+        어려운 이유: [원래 문장이 어려울 수 있는 이유]
+        
+        원래 문장은 다음과 같다: ${sentence}`;
+
+        try {
+            const simplifiedSentence = await talkToGPT(prompt, 0.3, 500); // OpenAI API 호출
+
+            const combineWithOriginal = `원래 문장: ${sentence}
+
+            ${simplifiedSentence}`; // 원래 문장은 따로 출력해서 토큰 아끼기
+
+            // 쉬운 표현으로 바뀐 문장을 UI에 표시하는 로직 추가
+            console.log(simplifiedSentence); // 콘솔에 출력하거나 UI에 표시
+            setGptOutput(combineWithOriginal);
+            setIsGPTLoading(false); // GPT 응답 로딩 완료
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            setIsGPTLoading(false); // GPT 응답 로딩 완료
+        }
+
+    };
+
     return (
         <SummaryContainer>
           <LeftContainer>
@@ -148,9 +211,16 @@ const Summary = () => {
                 height={100} // 로더의 높이
                 width={100} // 로더의 너비
                 />
+            ) : showSentences ? (
+                articleSentence.map((sentence, index) => (
+                    <p key={index} onClick={() => handleSentenceClick(sentence)} style={{ cursor: 'pointer' }}>
+                        {sentence}
+                    </p>
+                ))
             ) : (
                 <div>{article}</div>
             )}
+            <button onClick={handleMagnifierClick}>돋보기 아이콘</button>
 
             {/* 기사 네비게이션 버튼 */}
             <button onClick={handlePrev} disabled={currentArticleKey === 0}>
@@ -176,7 +246,6 @@ const Summary = () => {
             </TopRightContainer>
 
             <BottomRightContainer>
-
                 {/* gpt output */}
                 {isGPTLoading ? (
                     <TailSpin

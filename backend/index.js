@@ -52,7 +52,7 @@ const openai = new OpenAI({
   apiKey: USE_CHATGPT_API_KEY,
 }) // api키를 사용하여 OpenAIApi 객체 생성
 
-async function getChatGPTMessage(query, res) {
+async function getChatGPTMessage(query, res, tpt, mxt) {
 
   try {
     const response = await openai.chat.completions.create({
@@ -63,16 +63,16 @@ async function getChatGPTMessage(query, res) {
           "content": query
         }
       ],
-      temperature: 0.3,
-      max_tokens: 4095,
+      temperature: tpt,
+      max_tokens: mxt,
       top_p: 1,
       frequency_penalty: 0,
       presence_penalty: 0,
     }); // openai API로 답변 받아서 response에 저장
 
     // 콘솔로 출력해보기
-    // console.log(query);
-    console.log("total_tokens: "+response.usage.total_tokens);
+    console.log(query);
+    console.log("total_tokens: " + response.usage.total_tokens);
     console.log("gpt completion:\n");
     console.log(response.choices);
 
