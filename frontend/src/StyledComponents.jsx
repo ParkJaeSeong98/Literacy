@@ -190,7 +190,7 @@ export const StyledListItem = styled.li`
 export const PreviousContainer = styled.div`
   font-family: 'previous';
   font-size: 5vh;
-  width: 60vw;
+  width: 10vw; //60
   height: 6vh; /* 높이 고정 */
   border: 4px solid;
   padding: 30px;
@@ -215,15 +215,12 @@ export const PreviousContainer = styled.div`
   }
 
   &:hover {
-    &::-webkit-scrollbar-thumb {
-      background-color: #555; /* 스크롤에 hover 시 thumb 색상 변경 */
-    }
-
-    cursor: grab; /* 스크롤 위에 hover 시 grab 커서로 변경 */
+    overflow-x: auto; /* 마우스 호버시 수평 스크롤 활성화 */
+    cursor: grab;
   }
 
   &:active {
-    cursor: grabbing; /* 스크롤 위에 active 시 grabbing 커서로 변경 */
+    cursor: grabbing;
   }
 `;
 
