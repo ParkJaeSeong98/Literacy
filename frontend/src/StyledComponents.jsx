@@ -31,6 +31,12 @@ export const Logo = styled.img`
   margin-right: 0.6vw;
 `;
 
+export const GitLogo = styled.img`
+  margin-top: 10px;
+  width: 2vw;
+  height: 4vh;
+`;
+
 export const HeadText = styled.div`
   font-size: ${props => props.size || '4.5vh'};
   font-family: 'logofont';
@@ -85,7 +91,10 @@ export const SizedBox = styled.div`
 export const ContactContainer = styled.div`
   text-align: center;
   padding: 10px;
-  position: absolute;
+  //position: fixed;
+
+  margin-top: auto; /* 아래로 이동 */
+
   bottom: 0;
   //background-color: #f5f5f5;
   //width: 100%;
@@ -191,7 +200,7 @@ export const PreviousContainer = styled.div`
   font-family: 'previous';
   font-size: 5vh;
   width: 60vw; //60
-  height: 6vh; /* 높이 고정 */
+  height: 6vh; 
   border: 4px solid;
   padding: 30px;
   white-space: nowrap; /* 추가된 부분 */

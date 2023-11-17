@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import { BaseContainer, HeadContainer, LoginContainer, Logo, HeadText, FunctionContainer, StyledLink, StyledA, FunctionWrapper, SizedBox, ContactContainer, Tooltip } from './StyledComponents.jsx';
+import { BaseContainer, HeadContainer, LoginContainer, Logo, HeadText, FunctionContainer, StyledLink, StyledA, FunctionWrapper, SizedBox, ContactContainer, Tooltip, GitLogo } from './StyledComponents.jsx';
 
 
 const BaseLayout = () => {
@@ -21,7 +21,7 @@ const BaseLayout = () => {
           <Outlet />
           
           <ContactContainer>
-            <img src='/gitlogo.png' alt='logo' margin-top='10' width='25vw' height='25vh' />
+            <GitLogo src='/gitlogo.png' alt='logo' />
             <StyledA href='https://github.com/ParkJaeSeong98/Literacy' target='_blank'> Github</StyledA>
           </ContactContainer>
         </FunctionWrapper>
