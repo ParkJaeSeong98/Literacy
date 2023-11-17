@@ -309,3 +309,15 @@ export const BottomRightContainer = styled.div`
   flex: 3;
   background-color: #d0d0d0;
 `;
+
+// 문장별로 선택할 때 hover 기능에 필요한 스타일 컴포넌트
+export const Sentence = styled.p`
+    cursor: pointer;
+    margin: 0.5em 0;
+    padding: 0.5em;
+    border-radius: 5px;
+    &:hover {
+        border: 1px solid #00BFFF; // 마우스 호버 시 테두리 색상 설정
+        background-color: #f0f0f0; // 선택된 것처럼 보이도록 배경색도 변경
+    }
+`;

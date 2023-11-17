@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyledTextarea, SummaryContainer, RightContainer, LeftContainer, TopRightContainer, BottomRightContainer } from './StyledComponents.jsx';
+import { StyledTextarea, SummaryContainer, RightContainer, LeftContainer, TopRightContainer, BottomRightContainer, Sentence } from './StyledComponents.jsx';
 import { getDatabase, ref, onValue } from 'firebase/database';
 
 import app from './firebase.js'; // firebase.js 에서 내보낸 인스턴스
@@ -38,11 +38,11 @@ const Summary = () => {
             setIsGPTLoading(false); // gpt 응답 전에 로더 표시 끄기
 
             return messageContent;
-          } catch (error) {
+        } catch (error) {
             console.error("Error fetching data:", error);
             setIsGPTLoading(false); // gpt 응답 전에 로더 표시 끄기
             throw error;
-          }
+        }
             
     }    
 
@@ -213,14 +213,16 @@ const Summary = () => {
                 />
             ) : showSentences ? (
                 articleSentence.map((sentence, index) => (
-                    <p key={index} onClick={() => handleSentenceClick(sentence)} style={{ cursor: 'pointer' }}>
+                    <Sentence key={index} onClick={() => handleSentenceClick(sentence)} style={{ cursor: 'pointer' }}>
                         {sentence}
-                    </p>
+                    </Sentence>
                 ))
             ) : (
                 <div>{article}</div>
             )}
-            <button onClick={handleMagnifierClick}>돋보기 아이콘</button>
+            <button onClick={handleMagnifierClick}>
+                <img src="magnifierImage.png" alt="돋보기 아이콘" style={{ width: '30px', height: '30px' }}/>
+            </button>
 
             {/* 기사 네비게이션 버튼 */}
             <button onClick={handlePrev} disabled={currentArticleKey === 0}>
