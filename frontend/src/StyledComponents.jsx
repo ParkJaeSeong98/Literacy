@@ -190,7 +190,7 @@ export const StyledListItem = styled.li`
 export const PreviousContainer = styled.div`
   font-family: 'previous';
   font-size: 5vh;
-  width: 10vw; //60
+  width: 60vw; //60
   height: 6vh; /* 높이 고정 */
   border: 4px solid;
   padding: 30px;
