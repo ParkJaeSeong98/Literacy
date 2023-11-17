@@ -53,14 +53,30 @@ const openai = new OpenAI({
 }) // api키를 사용하여 OpenAIApi 객체 생성
 
 async function getChatGPTMessage(query, res) {
-  try {
-    const chatCompletion = await openai.chat.completions.create({
-      messages: [{ role: 'user', content: query }],
-      model: 'gpt-4',
-    }); // openai API로 답변 받아서 chatCompletion에 저장
 
-    console.log(chatCompletion.choices); // 콘솔로 출력해보기
-    res.json(chatCompletion.choices); // 응답을 클라이언트로 반환
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4-1106-preview",
+      messages: [
+        {
+          "role": "user",
+          "content": query
+        }
+      ],
+      temperature: 0.3,
+      max_tokens: 4095,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+    }); // openai API로 답변 받아서 response에 저장
+
+    // 콘솔로 출력해보기
+    // console.log(query);
+    console.log("total_tokens: "+response.usage.total_tokens);
+    console.log("gpt completion:\n");
+    console.log(response.choices);
+
+    res.json(response.choices); // 응답을 클라이언트로 반환
   } catch (error) {
     console.error('Error fetching from the chatGPT API:', error);
     res.status(500).json({ error: 'Failed to fetch data' }); // 에러를 클라이언트로 반환
@@ -72,8 +88,7 @@ app.get('/api/gpt', async (req, res) => {
   const query = req.query.q;
 
   if (query) {
-    await getChatGPTMessage(query, res); // 비동기 처리
-    
+    await getChatGPTMessage(query, res); // 비동기 처리  
   } else {
     res.status(400).json({ error: 'No query provided' }); // status(400)-> Bad request 사용자의 요청이 잘못되었을 때
   }

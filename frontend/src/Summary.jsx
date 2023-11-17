@@ -6,7 +6,7 @@ import app from './firebase.js'; // firebase.js 에서 내보낸 인스턴스
 import { TailSpin } from 'react-loader-spinner'; // 기사 가져오는 동안 사용할 로딩 상태 표시
 
 const Summary = () => {
-    const [userInput, setUserInput] = useState('');
+    const [userText, setUserText] = useState(''); // 사용자 요약본
     const [gptOutput, setGptOutput] = useState('');
     const [submittedInput, setSubmittedInput] = useState('');
 
@@ -26,9 +26,9 @@ const Summary = () => {
         // onValue는 이벤트 리스너 해제를 위한 함수를 반환
         const unsubscribe = onValue(articleRef, (snapshot) => {
             const data = snapshot.val();
-            console.log("data:\n"+data);
+            // console.log("data:\n"+data);
             const formattedData = data.replace(/\\n/g, "\n");
-            console.log("수정된 데이터:\n" + formattedData);
+            // console.log("수정된 데이터:\n" + formattedData);
             setArticle(formattedData);
             setIsArticleLoading(false); // 로딩 완료
         }, (error) => { 
@@ -44,56 +44,83 @@ const Summary = () => {
 
     // 입력 필드의 값이 바뀔 때 호출되는 함수
     const handleInputChange = (event) => {
-        setUserInput(event.target.value);
+        setUserText(event.target.value);
     };
 
     // gpt로부터 보낸 input에 대한 output을 받을 함수
     const talkToGPT = async (input) => {
         try {
-            const response = await fetch(`http://localhost:3000/api/gpt?q=${input}`);
+            const encodedInput = encodeURIComponent(input);
+            const response = await fetch(`http://localhost:3000/api/gpt?q=${encodedInput}`);
             const data = await response.json();
             
+            console.log(input);
             console.log(data);
             const messageContent = data[0].message.content;
             console.log(messageContent);
 
+            setIsGPTLoading(false); // gpt 응답 전에 로더 표시 끄기
+
             return messageContent;
           } catch (error) {
             console.error("Error fetching data:", error);
+            setIsGPTLoading(false); // gpt 응답 전에 로더 표시 끄기
             throw error;
           }
             
     }
 
     // 사용자가 엔터를 누르거나 버튼을 클릭할 때 호출되는 함수
-    // 이 함수에서 input을 넘겨줄 때, 사용자 인풋을 가지고 프롬프트를 바꿔서 gpt에게 전달한다.
+    // 이 함수에서 input을 넘겨줄 때, 사용자 인풋을 가지고 프롬프트를 구성하여 gpt에게 전달한다.
     const handleSubmit = async (input) => {
         input.preventDefault(); // 폼이 실제로 제출되는 것을 방지
 
         setIsGPTLoading(true); // gpt 답변 로더 켜기
 
-        setSubmittedInput(userInput); // 사용자 입력을 저장함.
+        setSubmittedInput(userText); // 사용자 입력을 저장함.
     
-        const format = "ChatGPT가 요약한 내용: (네가 요약한 내용), 사용자가 요약한 내용: (사용자 요약본의 원본), 사용자 요약본 평가: (사용자 요약본에서 원본 글의 사실과 다른 점)";
+        const prompt = `사용자는 자신의 문해력을 향상시키고 싶은 고등학생이다.
 
-        const prompt = `내가 준 "원본 글"을 요약하고, "사용자 요약본"과 비교해서 다음과 같은 "양식"으로 
-        답변해줘. 양식: ${format}, 원본 글: ${article} 사용자 요약본 ${userInput}`;
+        해야할 작업은 다음과 같다:
+        1. 원본 글을 읽고 모범 답안을 생성하라.
+        2. 사용자의 요약본을 그대로 출력하라.
+        3. 사용자 요약본을 평가하고 조언하라.
+        
+        1번 작업을 할 때 지켜야 할 사항은 다음과 같다:
+        1. 원본 글의 사실을 왜곡하지 않아야 한다.
+        2. 원본 글에서 핵심적인 내용이 포함되어야 한다.
+        3. 원본 글에 필요한 핵심적인 내용 이외에 세세한 내용은 제외한다.
+        4. 300자 내외로 요약한다.
+        5. 존댓말을 사용하지 않는다.
+        
+        3번 작업을 할 때 지켜야 할 사항은 다음과 같다:
+        1. 원본 글의 핵심 내용을 포함하고 있는지 평가.
+        2. 원본 글의 사실을 왜곡했는지 평가.
+        3. 필요하지 않은 내용이 요약에 누락된 것은 언급하지 않는다.
+        4. 존댓말을 사용한다.
+        
+        
+        답변의 예시는 다음과 같다:
+        
+        모범 답안: [요약 내용]
+        
+        사용자 요약본: [사용자 요약본]
+        
+        평가: [평가]
 
-        console.log(prompt);
-        console.log(userInput);
+        답변을 생성할 때 지켜야 할 때 지켜야 할 사항은 다음과 같다:
+        1. 답변의 예시를 반드시 지킬 것.
+        
+        원본글은 다음과 같다: ${article}
+        
+        
+        사용자 요약본:${userText}`;
 
-        const output = await talkToGPT(prompt); // GPT로부터 받은 응답
+        const GPTText = await talkToGPT(prompt); // GPT로부터 받은 응답
 
-        setIsGPTLoading(false); // gpt 응답 전에 로더 표시 끄기
-        setGptOutput(output);
+        console.log(GPTText);
 
-        if (gptOutput.includes('\n')) {
-            console.log(gptOutput);
-            console.log('GPT output contains newline characters');
-        } else {
-            console.log(gptOutput);
-            console.log(`GPT output don't contain newline characters`);
-        }
+        setGptOutput(GPTText);
     };
 
     // '다음' 버튼 핸들러
@@ -140,7 +167,7 @@ const Summary = () => {
                 <form onSubmit={handleSubmit}>
                     <StyledTextarea
                         rows="10"
-                        value={userInput}
+                        value={userText}
                         onChange={handleInputChange}
                     />
                     <br></br>
