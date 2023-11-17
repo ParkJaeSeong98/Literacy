@@ -37,6 +37,7 @@ const HomePage = () => {
             <Tooltip show={isTooltipVisible}>끝말잇기로 어휘력을 늘려봐요.</Tooltip>
           </FunctionContainer>
         </StyledLink>
+        <SizedBox></SizedBox>
         
       </FunctionWrapper>
     ); 

@@ -210,7 +210,7 @@ export const PreviousContainer = styled.div`
 
   &::-webkit-scrollbar {
     width: 12px;
-    height: 12px;
+    height: 20px;
   }
 
   &::-webkit-scrollbar-thumb {

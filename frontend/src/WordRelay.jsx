@@ -380,13 +380,18 @@ const WordRelay = () => {
     }
 
     const DraggableContainer = () => {
+
+      const containerRef = useRef(null);
+
       
       useEffect(() => {
         console.log(1);
+        const container = containerRef.current;
+        container.scrollLeft = container.scrollWidth - container.clientWidth;
       }, [previous]);
     
       return (
-        <PreviousContainer>
+        <PreviousContainer ref={containerRef}>
           {previous.map((word) => ( word + ' ' ))}
        </PreviousContainer>
       );
