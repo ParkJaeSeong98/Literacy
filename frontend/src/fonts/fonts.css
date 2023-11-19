@@ -7,3 +7,8 @@
   font-family: 'previous'; /* 로고 폰트의 이름 지정 */
   src: url('../fonts/LeeSeoyun.otf') format('truetype'); /* 로고 폰트 파일의 경로 수정 */
 }  
+
+@font-face {
+  font-family: 'summary'; /* 로고 폰트의 이름 지정 */
+  src: url('../fonts/NotoSansKR-Regular.ttf') format('truetype'); /* 로고 폰트 파일의 경로 수정 */
+}  

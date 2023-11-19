@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyledTextarea, SummaryContainer, RightContainer, LeftContainer, TopRightContainer, BottomRightContainer, Sentence } from './StyledComponents.jsx';
+import { StyledTextarea, SummaryContainer, RightContainer, LeftContainer, TopRightContainer, BottomRightContainer, Sentence, SentenceContainer, Category } from './StyledComponents.jsx';
 import { getDatabase, ref, onValue } from 'firebase/database';
 
 import app from './firebase.js'; // firebase.js 에서 내보낸 인스턴스
@@ -203,23 +203,28 @@ const Summary = () => {
     return (
         <SummaryContainer>
           <LeftContainer>
-            <h1>글 내용</h1>
-            {/* 로딩 인디케이터를 조건부 렌더링 */}
-            {isArticleLoading ? (
-                <TailSpin
-                color="#00BFFF" // 로더의 색상
-                height={100} // 로더의 높이
-                width={100} // 로더의 너비
-                />
-            ) : showSentences ? (
-                articleSentence.map((sentence, index) => (
-                    <Sentence key={index} onClick={() => handleSentenceClick(sentence)} style={{ cursor: 'pointer' }}>
-                        {sentence}
-                    </Sentence>
-                ))
-            ) : (
-                <div>{article}</div>
-            )}
+            <Category>카테고리</Category>
+            <SentenceContainer>
+              {/* 로딩 인디케이터를 조건부 렌더링 */}
+              {isArticleLoading ? (
+                  <TailSpin
+                  color="#00BFFF" // 로더의 색상
+                  height={100} // 로더의 높이
+                  width={100} // 로더의 너비
+                  />
+              ) : showSentences ? (
+                  articleSentence.map((sentence, index) => (
+                      <> 
+                        <Sentence key={index} onClick={() => handleSentenceClick(sentence)} style={{ cursor: 'pointer' }}>
+                            {sentence}
+                        </Sentence>
+                        {index !== articleSentence.length - 1 && <br />}
+                      </> 
+                  ))
+              ) : (
+                  <div>{article}</div>
+              )}
+            </SentenceContainer>  
             <button onClick={handleMagnifierClick}>
                 <img src="magnifierImage.png" alt="돋보기 아이콘" style={{ width: '30px', height: '30px' }}/>
             </button>

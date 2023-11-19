@@ -284,14 +284,57 @@ export const StyledTextarea = styled.textarea`
 `;
 
 export const SummaryContainer = styled.div`
+  font-family: 'summary';
   display: flex;
-  height: 80vh;
+  height: 82vh;
   white-space: pre-line
 `;
 
 export const LeftContainer = styled.div`
   flex: 1;
   padding: 20px;
+  padding-top: 10px;
+`;
+
+export const Category = styled.div`
+  font-family: 'summary';
+  font-size: 4vh;
+  padding-bottom: 5px;
+`;
+
+export const SentenceContainer = styled.div`
+  font-size: 2.5vh;
+
+  max-height: 70vh; /* 최대 높이 설정 */
+  border: 4px solid;
+  padding: 20px;
+  white-space: pre-line; /* 줄바꿈 처리 */
+  overflow-y: auto; /* 세로 스크롤을 허용하도록 수정 */
+  position: relative;
+
+  &::-webkit-scrollbar {
+    width: 12px;
+    height: 20px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  &:hover {
+    //overflow-y: auto;
+    //cursor: grab;
+  }
+
+  // &:active {
+  //   cursor: grabbing;
+  // }
 `;
 
 export const RightContainer = styled.div`
@@ -311,11 +354,11 @@ export const BottomRightContainer = styled.div`
 `;
 
 // 문장별로 선택할 때 hover 기능에 필요한 스타일 컴포넌트
-export const Sentence = styled.p`
+export const Sentence = styled.div`
     cursor: pointer;
-    margin: 0.5em 0;
-    padding: 0.5em;
-    border-radius: 5px;
+    //margin: 0.5em 0;
+    //padding: 0.5em;
+    border-radius: 10px;
     &:hover {
         border: 1px solid #00BFFF; // 마우스 호버 시 테두리 색상 설정
         background-color: #f0f0f0; // 선택된 것처럼 보이도록 배경색도 변경
