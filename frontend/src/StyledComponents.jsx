@@ -275,14 +275,6 @@ export const UpdateButton = styled(ModalButton)`
 
 // 요약
 
-export const StyledTextarea = styled.textarea`
-  width: 40vw;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  resize: none; /* 수직 리사이즈 활성화 */
-`;
-
 export const SummaryContainer = styled.div`
   font-family: 'summary';
   display: flex;
@@ -303,9 +295,11 @@ export const Category = styled.div`
 `;
 
 export const SentenceContainer = styled.div`
-  font-size: 2.5vh;
+  //font-size: 2.5vh;
+  font-size: ${props => props.fontsize || '2.5vh'};
 
-  max-height: 70vh; /* 최대 높이 설정 */
+  //max-height: 70vh; /* 최대 높이 설정 */
+  max-height: ${props => props.height || '70vh'};
   border: 4px solid;
   padding: 20px;
   white-space: pre-line; /* 줄바꿈 처리 */
@@ -344,13 +338,38 @@ export const RightContainer = styled.div`
 `;
 
 export const TopRightContainer = styled.div`
-  flex: 2;
+  flex: 1;
   margin-bottom: 10px;
 `;
 
 export const BottomRightContainer = styled.div`
   flex: 3;
+  width: 40vw;
+  padding: 2vh;
+  border: 4px solid #000;
   background-color: #d0d0d0;
+`;
+
+export const MidRightContainer = styled.div`
+  flex: 3;
+  width: 40vw;
+  padding: 2vh;
+  border: 4px solid #000;
+  margin-bottom: 2vh;
+`;
+
+
+export const StyledTextarea = styled.textarea`
+  width: 40vw;
+  height: 20vh;
+  resize: none; /* 수직 리사이즈 활성화 */
+  font-family: 'summary';
+  //font-size: 3.5vh;
+  padding: 2vh;
+  //margin: 20px;
+  border: 4px solid #000; /* 검정 테두리 추가 */
+  outline: none;
+  background-color: #D2B48C;
 `;
 
 // 문장별로 선택할 때 hover 기능에 필요한 스타일 컴포넌트

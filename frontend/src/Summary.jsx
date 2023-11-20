@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyledTextarea, SummaryContainer, RightContainer, LeftContainer, TopRightContainer, BottomRightContainer, Sentence, SentenceContainer, Category } from './StyledComponents.jsx';
+import { StyledTextarea, SummaryContainer, RightContainer, LeftContainer, TopRightContainer, BottomRightContainer, Sentence, SentenceContainer, Category, MidRightContainer } from './StyledComponents.jsx';
 import { getDatabase, ref, onValue } from 'firebase/database';
 
 import app from './firebase.js'; // firebase.js 에서 내보낸 인스턴스
@@ -8,6 +8,7 @@ import { TailSpin } from 'react-loader-spinner'; // 기사 가져오는 동안 �
 const Summary = () => {
     const [userText, setUserText] = useState(''); // 사용자 요약본
     const [gptOutput, setGptOutput] = useState('');
+    const [gptEasyOutput, setGptEasyOutput] = useState(''); // 쉽게 바꿔준 거 저장
     const [submittedInput, setSubmittedInput] = useState('');
 
     const [showSentences, setShowSentences] = useState(false);
@@ -16,6 +17,7 @@ const Summary = () => {
     const [articleSentence, setArticleSentence] = useState([]); // 기사를 문장별로 저장
     const [isArticleLoading, setIsArticleLoading] = useState(false); // 데이터 로딩 상태를 추적하는 상태 변수 (기사 가져올 때 로더)
     const [isGPTLoading, setIsGPTLoading] = useState(false); // GPT 답변 로더
+    const [isGPTEasyLoading, setIsGPTEasyLoading] = useState(false); // GPT 답변 로더 = 쉽게 바꿔주는 버전
 
     const [currentArticleKey, setCurrentArticleKey] = useState(0); // 현재 보고 있는 기사의 키
     const maxArticleKey = 4; // 기사 키의 최대값
@@ -161,7 +163,7 @@ const Summary = () => {
     };
 
     const handleSentenceClick = async (sentence) => {
-        setIsGPTLoading(true); // GPT 응답 로딩 시작
+        setIsGPTEasyLoading(true); // GPT 응답 로딩 시작
 
         const prompt = `사용자는 원래 문장이 어렵다고 느끼는 사람이다.
 
@@ -191,11 +193,11 @@ const Summary = () => {
 
             // 쉬운 표현으로 바뀐 문장을 UI에 표시하는 로직 추가
             console.log(simplifiedSentence); // 콘솔에 출력하거나 UI에 표시
-            setGptOutput(combineWithOriginal);
-            setIsGPTLoading(false); // GPT 응답 로딩 완료
+            setGptEasyOutput(combineWithOriginal);
+            setIsGPTEasyLoading(false); // GPT 응답 로딩 완료
         } catch (error) {
             console.error("Error fetching data:", error);
-            setIsGPTLoading(false); // GPT 응답 로딩 완료
+            setIsGPTEasyLoading(false); // GPT 응답 로딩 완료
         }
 
     };
@@ -203,7 +205,7 @@ const Summary = () => {
     return (
         <SummaryContainer>
           <LeftContainer>
-            <Category>카테고리</Category>
+            <Category>카테고리, 난이도</Category>
             <SentenceContainer>
               {/* 로딩 인디케이터를 조건부 렌더링 */}
               {isArticleLoading ? (
@@ -251,6 +253,18 @@ const Summary = () => {
                     <button type="submit">제출</button>
                 </form>
             </TopRightContainer>
+
+            <MidRightContainer>
+                {isGPTEasyLoading ? (
+                    <TailSpin
+                    color="#00BFFF" // 로더의 색상
+                    height={100} // 로더의 높이
+                    width={100} // 로더의 너비
+                    />
+                ) : (
+                    <div>{gptEasyOutput}</div>
+                )}
+            </MidRightContainer>
 
             <BottomRightContainer>
                 {/* gpt output */}
