@@ -383,3 +383,82 @@ export const Sentence = styled.div`
         background-color: #f0f0f0; // 선택된 것처럼 보이도록 배경색도 변경
     }
 `;
+
+
+// 그림퀴즈
+
+
+export const PictureBookContainer = styled.div`
+  display: grid;
+  height: 100vh; // 전체 뷰포트 높이 사용
+  align-items: start; // 첫 번째 행의 자식 요소들을 위쪽으로 정렬
+`;
+
+export const PictureBookTop= styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: auto;
+    width: 100%;
+    max-width: 600px;
+
+    li {
+      cursor: pointer; // 마우스를 올렸을 때 커서를 포인터로 변경
+      transition: background-color 0.2s; // 배경 색상 변화에 애니메이션 효과를 적용 (적용시 좀 더 부드러움)
+
+      &:hover {
+        background-color: #f0f0f0; // 마우스 오버 시 배경 색상 변경
+      }
+    }
+  }
+`;
+
+export const PictureBookBottom = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  grid-gap: 16px;
+`;
+
+export const PictureBookBottomLeft = styled.div`
+  grid-column: 1;
+`;
+
+export const PictureBookBottomRight = styled.div`
+  grid-column: 2;
+`;
+
+export const ImageContainer = styled.div`
+  position: relative; // 이미지 컨테이너에 상대적 위치 지정
+  width: 300px; // 이미지 컨테이너의 너비 지정
+  height: 300px; // 이미지 컨테이너의 높이 지정
+  margin: auto; // 가운데 정렬
+`;
+
+
+export const ArrowButton = styled.button`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: transparent; // 버튼 배경을 투명하게 설정
+  border: none; // 버튼 테두리 제거
+  font-size: 24px; // 화살표 크기 조정
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f0f0f0; // 마우스 오버 시 배경 색상 변경
+  }
+
+  &.prev {
+    left: -40px; // 이미지 왼쪽 바깥으로 이동
+  }
+
+  &.next {
+    right: -40px; // 이미지 오른쪽 바깥으로 이동
+  }
+`;
