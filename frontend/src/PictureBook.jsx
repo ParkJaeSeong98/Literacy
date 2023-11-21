@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
-import { PictureBookContainer, PictureBookTop, PictureBookBottom, PictureBookBottomLeft, PictureBookBottomRight, ImageContainer, ArrowButton } from './StyledComponents.jsx';
+import { StyledTextarea, PictureBookContainer, PictureBookTop, PictureBookBottom, PictureBookBottomLeft, PictureBookBottomRight, ImageContainer, ArrowButton } from './StyledComponents.jsx';
+
+import { TailSpin } from 'react-loader-spinner'; // 로딩 상태 표시
 
 import booksData from './booksData';
 
 const PictureBook = () => {
-  const [books, setBooks] = useState(booksData);
-  const [selectedBook, setSelectedBook] = useState(null);
-  const [imageIndex, setImageIndex] = useState(0);
+  const [books, setBooks] = useState(booksData); // booksData.js에서 책 정보 가져옴
+  const [selectedBook, setSelectedBook] = useState(null); // 선택된 책 상태
+  const [imageIndex, setImageIndex] = useState(0); // 이미지 인덱스
+
+  const [userText, setUserText] = useState(''); // 사용자 입력
+  const [submittedInput, setSubmittedInput] = useState('');
+  const [isGPTLoading, setIsGPTLoading] = useState(false); // GPT 답변 로더
+  const [gptOutput, setGptOutput] = useState(''); // GPT 답변
 
   // 선택된 책의 이미지 경로를 생성하는 함수
   const getImagePath = (id, index) => {
@@ -34,6 +41,62 @@ const PictureBook = () => {
   const handleBackToList = () => {
       setSelectedBook(null); // 책 목록으로 돌아가기
   };
+
+  const talkToGPT = async (input, tpt, mxt) => { //input: 프롬프트, tpt: 온도, mxt: max_tokens
+    try {
+        const encodedInput = encodeURIComponent(input);
+        const encodedTpt = encodeURIComponent(tpt);
+        const encodedMxt = encodeURIComponent(mxt);
+
+        const response = await fetch(`http://localhost:3000/api/gpt?q=${encodedInput}&${encodedTpt}&${encodedMxt}`);
+        const data = await response.json();
+        
+        console.log(input);
+        console.log(data);
+        const messageContent = data[0].message.content;
+        console.log(messageContent);
+
+        setIsGPTLoading(false); // gpt 응답 전에 로더 표시 끄기
+
+        return messageContent;
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        setIsGPTLoading(false); // gpt 응답 전에 로더 표시 끄기
+        throw error;
+    }
+        
+  } 
+
+  // 입력 필드의 값이 바뀔 때 호출되는 함수
+  const handleInputChange = (event) => {
+    setUserText(event.target.value);
+  };  
+
+  // 사용자가 엔터를 누르거나 버튼을 클릭할 때 호출되는 함수
+  const handleSubmit = async (input) => {
+    input.preventDefault(); // 폼이 실제로 제출되는 것을 방지
+    setIsGPTLoading(true); // gpt 답변 로더 켜기
+    setSubmittedInput(userText); // 사용자 입력을 저장함.
+
+    const prompt = `
+    사용자는 현재 그림책의 미리보기를 보고 책의 내용을 유추했다.
+    사용자가 유추한 내용과 책의 설명을 보고 사용자가 얼마나 유사하게 책의 내용을 유추했는지 이야기해 보아라.
+
+    실제 책의 설명: ${selectedBook.preview}
+
+    사용자 유추: ${userText}
+    `;
+
+    try {
+      const GPTText = await talkToGPT(prompt, 0.3, 4095);
+      console.log(GPTText);
+      setGptOutput(GPTText);
+      setIsGPTLoading(false); // GPT 응답 로딩 완료
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        setIsGPTLoading(false); // GPT 응답 로딩 완료
+    }
+  }
 
   return (
       <PictureBookContainer>
@@ -70,8 +133,30 @@ const PictureBook = () => {
               )}
           </PictureBookTop>
           <PictureBookBottom>
-            <PictureBookBottomLeft>입력</PictureBookBottomLeft>
-            <PictureBookBottomRight>결과</PictureBookBottomRight>
+            <PictureBookBottomLeft>
+              {/* 사용자 입력창 */}
+              <form onSubmit={handleSubmit}>
+                    <StyledTextarea
+                        rows="10"
+                        value={userText}
+                        onChange={handleInputChange}
+                    />
+                    <br></br>
+                    <button type="submit">제출</button>
+                </form>
+            </PictureBookBottomLeft>
+            <PictureBookBottomRight>
+                {/* gpt output */}
+                {isGPTLoading ? (
+                    <TailSpin
+                    color="#00BFFF" // 로더의 색상
+                    height={100} // 로더의 높이
+                    width={100} // 로더의 너비
+                    />
+                ) : (
+                    <div>{gptOutput}</div>
+                )}
+            </PictureBookBottomRight>
           </PictureBookBottom>
       </PictureBookContainer>
   );

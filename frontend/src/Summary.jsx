@@ -3,7 +3,7 @@ import { StyledTextarea, SummaryContainer, RightContainer, LeftContainer, TopRig
 import { getDatabase, ref, onValue } from 'firebase/database';
 
 import app from './firebase.js'; // firebase.js 에서 내보낸 인스턴스
-import { TailSpin } from 'react-loader-spinner'; // 기사 가져오는 동안 사용할 로딩 상태 표시
+import { TailSpin } from 'react-loader-spinner'; // 로딩 상태 표시
 
 const Summary = () => {
     const [userText, setUserText] = useState(''); // 사용자 요약본

@@ -392,6 +392,7 @@ export const PictureBookContainer = styled.div`
   display: grid;
   height: 100vh; // 전체 뷰포트 높이 사용
   align-items: start; // 첫 번째 행의 자식 요소들을 위쪽으로 정렬
+  white-space: pre-line
 `;
 
 export const PictureBookTop= styled.div`
