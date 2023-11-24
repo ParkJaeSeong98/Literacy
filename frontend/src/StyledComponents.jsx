@@ -139,25 +139,25 @@ export const StyledInput = styled.input`
 `;
 
 export const StyledButton = styled.button`
-font-family: 'logofont';
-padding: 10px 20px;
-background-color: #ffffff;
-color: #333;
-border: 2px solid #333;
-border-radius: 12px;
-cursor: pointer;
-transition: background-color 0.3s, color 0.3s, border-color 0.3s; /* 트랜지션 추가 */
+  font-family: 'logofont';
+  padding: 10px 20px;
+  background-color: #ffffff;
+  color: #333;
+  border: 2px solid #333;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s; /* 트랜지션 추가 */
 
-&:hover {
-  background-color: #333;
-  color: #ffffff;
-  border-color: #ffffff;
-}
+  &:hover {
+    background-color: #333;
+    color: #ffffff;
+    border-color: #ffffff;
+  }
 
-&:active {
-  background-color: #1a1a1a;
-  border-color: #1a1a1a;
-}
+  &:active {
+    background-color: #1a1a1a;
+    border-color: #1a1a1a;
+  }
 `;
 
 export const StyledModal = styled(Modal)`
@@ -237,7 +237,7 @@ export const PreviousContainer = styled.div`
 
 export const ButtonContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: ${props => props.content || 'space-between'};
 `;
 
 export const ModalButton = styled.button`
@@ -267,8 +267,12 @@ export const SubmitButton = styled(ModalButton)`
 `;
 
 export const UpdateButton = styled(ModalButton)`
-  background-color: #444;
-  color: white;
+  background-color: #D2B48C;
+  color: black;
+  border: 1px solid;
+  width: 6vw;
+  height: 6vh;
+  font-size: 2vh;
 `;
 
 
@@ -302,6 +306,8 @@ export const SentenceContainer = styled.div`
   max-height: ${props => props.height || '70vh'};
   border: 4px solid;
   padding: 20px;
+  padding-bottom: 30px;
+  margin-bottom: 20px;
   white-space: pre-line; /* 줄바꿈 처리 */
   overflow-y: auto; /* 세로 스크롤을 허용하도록 수정 */
   position: relative;
@@ -335,6 +341,8 @@ export const RightContainer = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+  padding: 20px;
+  padding-top: 10px;
 `;
 
 export const TopRightContainer = styled.div`
@@ -348,6 +356,35 @@ export const BottomRightContainer = styled.div`
   padding: 2vh;
   border: 4px solid #000;
   background-color: #d0d0d0;
+  font-size: 2vh;
+
+  //display: flex;
+  //justify-content: center;   가운데정렬 하고 싶은데, 텍스트가 이상해짐;;
+  //align-items: center;
+
+  white-space: pre-line; /* 줄바꿈 처리 */
+  overflow-y: auto; /* 세로 스크롤을 허용하도록 수정 */
+  position: relative;
+
+  &::-webkit-scrollbar {
+    width: 12px;
+    height: 20px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  &:hover {
+    //overflow-y: auto;
+    //cursor: grab;
+  }
 `;
 
 export const MidRightContainer = styled.div`
@@ -356,6 +393,33 @@ export const MidRightContainer = styled.div`
   padding: 2vh;
   border: 4px solid #000;
   margin-bottom: 2vh;
+  font-size: 2vh;
+
+
+
+  white-space: pre-line; /* 줄바꿈 처리 */
+  overflow-y: auto; /* 세로 스크롤을 허용하도록 수정 */
+  position: relative;
+
+  &::-webkit-scrollbar {
+    width: 12px;
+    height: 20px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  &:hover {
+    //overflow-y: auto;
+    //cursor: grab;
+  }
 `;
 
 
@@ -364,12 +428,36 @@ export const StyledTextarea = styled.textarea`
   height: 20vh;
   resize: none; /* 수직 리사이즈 활성화 */
   font-family: 'summary';
-  //font-size: 3.5vh;
+  font-size: 2.5vh;
   padding: 2vh;
   //margin: 20px;
   border: 4px solid #000; /* 검정 테두리 추가 */
   outline: none;
   background-color: #D2B48C;
+
+  white-space: pre-line; /* 줄바꿈 처리 */
+  overflow-y: auto; /* 세로 스크롤을 허용하도록 수정 */
+  position: relative;
+
+  &::-webkit-scrollbar {
+    width: 12px;
+    height: 20px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  &:hover {
+    //overflow-y: auto;
+    //cursor: grab;
+  }
 `;
 
 // 문장별로 선택할 때 hover 기능에 필요한 스타일 컴포넌트

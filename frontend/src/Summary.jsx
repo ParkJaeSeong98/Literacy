@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyledTextarea, SummaryContainer, RightContainer, LeftContainer, TopRightContainer, BottomRightContainer, Sentence, SentenceContainer, Category, MidRightContainer } from './StyledComponents.jsx';
+import { StyledTextarea, SummaryContainer, RightContainer, LeftContainer, TopRightContainer, BottomRightContainer, Sentence, SentenceContainer, Category, MidRightContainer, ButtonContainer, UpdateButton } from './StyledComponents.jsx';
 import { getDatabase, ref, onValue } from 'firebase/database';
 
 import app from './firebase.js'; // firebase.js 에서 내보낸 인스턴스
@@ -7,8 +7,8 @@ import { TailSpin } from 'react-loader-spinner'; // 로딩 상태 표시
 
 const Summary = () => {
     const [userText, setUserText] = useState(''); // 사용자 요약본
-    const [gptOutput, setGptOutput] = useState('');
-    const [gptEasyOutput, setGptEasyOutput] = useState(''); // 쉽게 바꿔준 거 저장
+    const [gptOutput, setGptOutput] = useState('정답');
+    const [gptEasyOutput, setGptEasyOutput] = useState('힌트'); // 쉽게 바꿔준 거 저장
     const [submittedInput, setSubmittedInput] = useState('');
 
     const [showSentences, setShowSentences] = useState(false);
@@ -205,12 +205,12 @@ const Summary = () => {
     return (
         <SummaryContainer>
           <LeftContainer>
-            <Category>카테고리, 난이도</Category>
+            {/* <Category>카테고리, 난이도</Category> */}
             <SentenceContainer>
               {/* 로딩 인디케이터를 조건부 렌더링 */}
               {isArticleLoading ? (
                   <TailSpin
-                  color="#00BFFF" // 로더의 색상
+                  color="#8e8d8f" // 로더의 색상
                   height={100} // 로더의 높이
                   width={100} // 로더의 너비
                   />
@@ -227,18 +227,23 @@ const Summary = () => {
                   <div>{article}</div>
               )}
             </SentenceContainer>  
-            <button onClick={handleMagnifierClick}>
-                <img src="magnifierImage.png" alt="돋보기 아이콘" style={{ width: '30px', height: '30px' }}/>
-            </button>
+            
 
-            {/* 기사 네비게이션 버튼 */}
-            <button onClick={handlePrev} disabled={currentArticleKey === 0}>
-                이전
-            </button>
-            <button onClick={handleNext} disabled={currentArticleKey === maxArticleKey}>
-                다음
-            </button>
+            <ButtonContainer content='space-around'>
+                <UpdateButton onClick={handlePrev} disabled={currentArticleKey === 0}>
+                    이전
+                </UpdateButton>
+                
+                <UpdateButton onClick={handleMagnifierClick}>
+                    <img src="magnifierImage.png" alt="돋보기 아이콘" style={{ width: '3vw', height: '3vh' }}/>
+                </UpdateButton>
+
+                <UpdateButton onClick={handleNext} disabled={currentArticleKey === maxArticleKey}>
+                    다음
+                </UpdateButton>
+            </ButtonContainer>
           </LeftContainer>
+
           <RightContainer>
 
             <TopRightContainer>
@@ -250,14 +255,14 @@ const Summary = () => {
                         onChange={handleInputChange}
                     />
                     <br></br>
-                    <button type="submit">제출</button>
+                    <ButtonContainer content='center'><UpdateButton type="submit">제출</UpdateButton></ButtonContainer>
                 </form>
             </TopRightContainer>
 
             <MidRightContainer>
                 {isGPTEasyLoading ? (
                     <TailSpin
-                    color="#00BFFF" // 로더의 색상
+                    color="#8e8d8f" // 로더의 색상
                     height={100} // 로더의 높이
                     width={100} // 로더의 너비
                     />
@@ -270,7 +275,7 @@ const Summary = () => {
                 {/* gpt output */}
                 {isGPTLoading ? (
                     <TailSpin
-                    color="#00BFFF" // 로더의 색상
+                    color="#8e8d8f" // 로더의 색상
                     height={100} // 로더의 높이
                     width={100} // 로더의 너비
                     />
