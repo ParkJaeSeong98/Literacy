@@ -28,7 +28,7 @@ const HomePage = () => {
         <StyledLink to='/function2' isHovered={true}>
           <FunctionContainer onMouseEnter={() => setTooltipVisible(true)} onMouseLeave={() => setTooltipVisible(false)}>
             그림 퀴즈
-            <Tooltip show={isTooltipVisible}>그림 퀴즈를 풀어보세요.</Tooltip>
+            <Tooltip show={isTooltipVisible}>그림책 내용을 생각해보아요.</Tooltip>
           </FunctionContainer>
         </StyledLink>
         <SizedBox></SizedBox>

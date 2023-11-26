@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
-import { StyledTextarea, PictureBookContainer, PictureBookTop, PictureBookBottom, PictureBookBottomLeft, PictureBookBottomRight, ImageContainer, ArrowButton } from './StyledComponents.jsx';
+import { FontH, StyledTextarea, PictureBookContainer, PictureBookTop, PictureBookBottom, PictureBookBottomLeft, PictureBookBottomRight, ImageContainer, ArrowButton, CategoryImage } from './StyledComponents.jsx';
 
 import { TailSpin } from 'react-loader-spinner'; // 로딩 상태 표시
 
@@ -103,8 +103,7 @@ const PictureBook = () => {
           <PictureBookTop>
               {selectedBook ? (
                   <>
-                    <button onClick={handleBackToList}>목록으로</button>
-                    <h1>{selectedBook.title}</h1>
+                    <FontH>『 {selectedBook.title} 』</FontH>
                     <ImageContainer>
                       <ArrowButton className="prev" onClick={handlePrevClick} disabled={imageIndex === 0}>
                         ◀
@@ -112,52 +111,62 @@ const PictureBook = () => {
                       <img 
                       src={getImagePath(selectedBook.id, imageIndex)} 
                       alt="Book Preview"
-                      style={{ width: '300px', height: '300px' }}
+                      style={{ width: '360px', height: '360px' }}
                       />
                       <ArrowButton className="next" onClick={handleNextClick} disabled={selectedBook && imageIndex === selectedBook.pages_cnt - 1}>
                         ▶
                       </ArrowButton>
                     </ImageContainer>
+                    <button onClick={handleBackToList}>목록으로</button>
+
+                    <PictureBookBottom>
+                      <PictureBookBottomLeft>
+                        {/* 사용자 입력창 */}
+                        <form onSubmit={handleSubmit}>
+                          <StyledTextarea
+                            size='15vh'
+                            rows="10"
+                            value={userText}
+                            onChange={handleInputChange}
+                          />
+                          <br></br>
+                          <button type="submit">제출</button>
+                        </form>
+                      </PictureBookBottomLeft>
+                      <PictureBookBottomRight>
+                        {/* gpt output */}
+                        {isGPTLoading ? (
+                          <TailSpin
+                            color="#00BFFF" // 로더의 색상
+                            height={100} // 로더의 높이
+                            width={100} // 로더의 너비
+                          />
+                        ) : (
+                          <div>{gptOutput}</div>
+                        )}
+                      </PictureBookBottomRight>
+                    </PictureBookBottom>
+
                   </>
               ) : (
                   <>
-                    <h1>책 목록</h1>
-                    <ul>
+                    <FontH>책 목록</FontH>
+                    <div>
                       {books.map((book) => (
-                        <li key={book.id} onClick={() => handleBookClick(book)} style={{ cursor: 'pointer' }}>
-                            {book.title}
-                        </li>
+                        <CategoryImage>
+                        <div key={book.id} onClick={() => handleBookClick(book)} style={{ cursor: 'pointer' }}>
+                            {/* {book.title} */}
+                            <img src={getImagePath(book.id, 0)} alt="Book Preview" style={{ width: '200px', height: '200px' }} />  
+                        </div>
+                        <br></br>
+                        </CategoryImage>
                       ))}
-                    </ul>
+                    </div>
+                    
                   </>
               )}
           </PictureBookTop>
-          <PictureBookBottom>
-            <PictureBookBottomLeft>
-              {/* 사용자 입력창 */}
-              <form onSubmit={handleSubmit}>
-                    <StyledTextarea
-                        rows="10"
-                        value={userText}
-                        onChange={handleInputChange}
-                    />
-                    <br></br>
-                    <button type="submit">제출</button>
-                </form>
-            </PictureBookBottomLeft>
-            <PictureBookBottomRight>
-                {/* gpt output */}
-                {isGPTLoading ? (
-                    <TailSpin
-                    color="#00BFFF" // 로더의 색상
-                    height={100} // 로더의 높이
-                    width={100} // 로더의 너비
-                    />
-                ) : (
-                    <div>{gptOutput}</div>
-                )}
-            </PictureBookBottomRight>
-          </PictureBookBottom>
+          
       </PictureBookContainer>
   );
 }

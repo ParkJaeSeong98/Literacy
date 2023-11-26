@@ -444,7 +444,7 @@ export const MidRightContainer = styled.div`
 
 export const StyledTextarea = styled.textarea`
   width: 40vw;
-  height: 20vh;
+  height: ${props => props.size || '20vh'};
   resize: none; /* 수직 리사이즈 활성화 */
   font-family: 'summary';
   font-size: 2.5vh;
@@ -496,9 +496,10 @@ export const Sentence = styled.div`
 
 
 export const PictureBookContainer = styled.div`
-  display: grid;
-  height: 100vh; // 전체 뷰포트 높이 사용
-  align-items: start; // 첫 번째 행의 자식 요소들을 위쪽으로 정렬
+  display: flex;
+  //height: 100vh; // 전체 뷰포트 높이 사용
+  align-items: center; // 첫 번째 행의 자식 요소들을 위쪽으로 정렬
+  justify-content: center;
   white-space: pre-line
 `;
 
@@ -506,24 +507,23 @@ export const PictureBookTop= styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 16px;
 
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: auto;
-    width: 100%;
-    max-width: 600px;
+  // div {
+  //   list-style: none;
+  //   margin: auto;
+  //   //width: 100%;
+  //   //max-width: 600px;
 
-    li {
-      cursor: pointer; // 마우스를 올렸을 때 커서를 포인터로 변경
-      transition: background-color 0.2s; // 배경 색상 변화에 애니메이션 효과를 적용 (적용시 좀 더 부드러움)
+  //   div {
+  //     padding: 20px;
+  //     cursor: pointer; // 마우스를 올렸을 때 커서를 포인터로 변경
+  //     transition: background-color 0.2s; // 배경 색상 변화에 애니메이션 효과를 적용 (적용시 좀 더 부드러움)
 
-      &:hover {
-        background-color: #f0f0f0; // 마우스 오버 시 배경 색상 변경
-      }
-    }
-  }
+  //     &:hover {
+  //       background-color: #f0f0f0; // 마우스 오버 시 배경 색상 변경
+  //     }
+  //   }
+  // }
 `;
 
 export const PictureBookBottom = styled.div`
@@ -539,12 +539,48 @@ export const PictureBookBottomLeft = styled.div`
 
 export const PictureBookBottomRight = styled.div`
   grid-column: 2;
+
+  //flex: 3;
+  width: 40vw;
+  height: 15vh;
+  padding: 2vh;
+  border: 4px solid #000;
+  background-color: #d0d0d0;
+  font-size: 2.5vh;
+
+  //display: flex;
+  //justify-content: center;   가운데정렬 하고 싶은데, 텍스트가 이상해짐;;
+  //align-items: center;
+
+  white-space: pre-line; /* 줄바꿈 처리 */
+  overflow-y: auto; /* 세로 스크롤을 허용하도록 수정 */
+  position: relative;
+
+  &::-webkit-scrollbar {
+    width: 12px;
+    height: 20px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  &:hover {
+    //overflow-y: auto;
+    //cursor: grab;
+  }
 `;
 
 export const ImageContainer = styled.div`
   position: relative; // 이미지 컨테이너에 상대적 위치 지정
-  width: 300px; // 이미지 컨테이너의 너비 지정
-  height: 300px; // 이미지 컨테이너의 높이 지정
+  width: 360px; // 이미지 컨테이너의 너비 지정
+  height: 360px; // 이미지 컨테이너의 높이 지정
   margin: auto; // 가운데 정렬
 `;
 
@@ -568,5 +604,19 @@ export const ArrowButton = styled.button`
 
   &.next {
     right: -40px; // 이미지 오른쪽 바깥으로 이동
+  }
+`;
+
+export const FontH = styled.h1`
+  font-family: 'logofont';
+  font-size: 40px;
+`;
+
+export const CategoryImage = styled.div`
+  padding: 20px;
+  cursor: pointer; // 마우스를 올렸을 때 커서를 포인터로 변경
+  transition: background-color 0.2s; // 배경 색상 변화에 애니메이션 효과를 적용 (적용시 좀 더 부드러움)
+  &:hover {
+    background-color: #f0f0f0; // 마우스 오버 시 배경 색상 변경
   }
 `;

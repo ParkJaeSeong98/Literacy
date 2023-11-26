@@ -248,7 +248,7 @@ const Summary = () => {
            <BoxContainer2>  
             <TopRightContainer>
             {/* 사용자 입력창 */}
-                <form onSubmit={handleSubmit}>
+                <form id='myForm' onSubmit={handleSubmit}>
                     <StyledTextarea
                         rows="10"
                         value={userText}
@@ -283,7 +283,7 @@ const Summary = () => {
                 )}
             </BottomRightContainer>
            </BoxContainer2>       
-            <ButtonContainer content='center'><UpdateButton type="submit">✔</UpdateButton></ButtonContainer>   
+            <ButtonContainer content='center'><UpdateButton type="submit" form="myForm">✔</UpdateButton></ButtonContainer>   
           
           </RightContainer>
         </SummaryContainer>
