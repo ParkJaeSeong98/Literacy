@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyledTextarea, SummaryContainer, RightContainer, LeftContainer, TopRightContainer, BottomRightContainer, Sentence, SentenceContainer, Category, MidRightContainer, ButtonContainer, UpdateButton } from './StyledComponents.jsx';
+import { BoxContainer2, StyledTextarea, SummaryContainer, RightContainer, LeftContainer, TopRightContainer, BottomRightContainer, Sentence, SentenceContainer, Category, MidRightContainer, ButtonContainer, UpdateButton, BoxContainer } from './StyledComponents.jsx';
 import { getDatabase, ref, onValue } from 'firebase/database';
 
 import app from './firebase.js'; // firebase.js 에서 내보낸 인스턴스
@@ -229,23 +229,23 @@ const Summary = () => {
             </SentenceContainer>  
             
 
-            <ButtonContainer content='space-around'>
+            <ButtonContainer >
                 <UpdateButton onClick={handlePrev} disabled={currentArticleKey === 0}>
-                    이전
+                    {'<<'}
                 </UpdateButton>
                 
                 <UpdateButton onClick={handleMagnifierClick}>
-                    <img src="magnifierImage.png" alt="돋보기 아이콘" style={{ width: '3vw', height: '3vh' }}/>
+                    <img src="magnifierImage.png" alt="돋보기 아이콘" style={{ width: '30px', height: '30px' }}/>
                 </UpdateButton>
 
                 <UpdateButton onClick={handleNext} disabled={currentArticleKey === maxArticleKey}>
-                    다음
+                    {'>>'}
                 </UpdateButton>
             </ButtonContainer>
           </LeftContainer>
 
           <RightContainer>
-
+           <BoxContainer2>  
             <TopRightContainer>
             {/* 사용자 입력창 */}
                 <form onSubmit={handleSubmit}>
@@ -255,7 +255,6 @@ const Summary = () => {
                         onChange={handleInputChange}
                     />
                     <br></br>
-                    <ButtonContainer content='center'><UpdateButton type="submit">제출</UpdateButton></ButtonContainer>
                 </form>
             </TopRightContainer>
 
@@ -282,7 +281,10 @@ const Summary = () => {
                 ) : (
                     <div>{gptOutput}</div>
                 )}
-            </BottomRightContainer>    
+            </BottomRightContainer>
+           </BoxContainer2>       
+            <ButtonContainer content='center'><UpdateButton type="submit">✔</UpdateButton></ButtonContainer>   
+          
           </RightContainer>
         </SummaryContainer>
     );

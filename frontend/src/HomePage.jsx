@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { BaseContainer, HeadContainer, LoginContainer, Logo, HeadText, FunctionContainer, StyledLink, StyledA, FunctionWrapper, SizedBox, ContactContainer, Tooltip } from './StyledComponents.jsx';
+import { BaseContainer, HeadContainer, LoginContainer, Logo, HeadText, FunctionContainer, StyledLink, StyledA, FunctionWrapper, SizedBox, ContactContainer, Tooltip,
+GitLogo } from './StyledComponents.jsx';
 
 
 const HomePage = () => {
@@ -38,6 +39,11 @@ const HomePage = () => {
           </FunctionContainer>
         </StyledLink>
         <SizedBox></SizedBox>
+
+        <ContactContainer>
+          <GitLogo src='/gitlogo.png' alt='logo' />
+          <StyledA href='https://github.com/ParkJaeSeong98/Literacy' target='_blank'> Github</StyledA>
+        </ContactContainer>
         
       </FunctionWrapper>
     ); 

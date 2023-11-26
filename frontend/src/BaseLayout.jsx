@@ -20,12 +20,13 @@ const BaseLayout = () => {
   
           <Outlet />
           
-          <ContactContainer>
-            <GitLogo src='/gitlogo.png' alt='logo' />
-            <StyledA href='https://github.com/ParkJaeSeong98/Literacy' target='_blank'> Github</StyledA>
-          </ContactContainer>
         </FunctionWrapper>
-  
+
+        {/* <ContactContainer>
+          <GitLogo src='/gitlogo.png' alt='logo' />
+          <StyledA href='https://github.com/ParkJaeSeong98/Literacy' target='_blank'> Github</StyledA>
+        </ContactContainer> */}
+
       </BaseContainer>
     );
   }

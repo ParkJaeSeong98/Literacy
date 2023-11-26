@@ -268,7 +268,7 @@ const WordRelay = () => {
           ))}
           <ButtonContainer>
             <SubmitButton onClick={handleAnswerSubmit}>제출</SubmitButton>
-            <UpdateButton onClick={updateAnswerChoices} disabled={firstAnswerIndex === meaningPool.length - 1}>업데이트</UpdateButton>
+            <SubmitButton onClick={updateAnswerChoices} disabled={firstAnswerIndex === meaningPool.length - 1}>업데이트</SubmitButton>
           </ButtonContainer>
       
           <StyledModal

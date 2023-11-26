@@ -269,10 +269,18 @@ export const SubmitButton = styled(ModalButton)`
 export const UpdateButton = styled(ModalButton)`
   background-color: #D2B48C;
   color: black;
-  border: 1px solid;
-  width: 6vw;
-  height: 6vh;
-  font-size: 2vh;
+  font-size: 4vh;
+
+  &:hover:not(:disabled) {
+    background-color: #7d7272;
+    color: white;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    background-color: #D2B48C; /* UpdateButton의 기본 배경색으로 설정 */
+    color: black; /* UpdateButton의 기본 글자색으로 설정 */
+  }
 `;
 
 
@@ -282,14 +290,18 @@ export const UpdateButton = styled(ModalButton)`
 export const SummaryContainer = styled.div`
   font-family: 'summary';
   display: flex;
-  height: 82vh;
+  height: 90vh;
   white-space: pre-line
 `;
 
 export const LeftContainer = styled.div`
   flex: 1;
   padding: 20px;
-  padding-top: 10px;
+  padding-right: 30px;
+  padding-top: 30px;
+  margin-left: 30px;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const Category = styled.div`
@@ -299,10 +311,7 @@ export const Category = styled.div`
 `;
 
 export const SentenceContainer = styled.div`
-  //font-size: 2.5vh;
   font-size: ${props => props.fontsize || '2.5vh'};
-
-  //max-height: 70vh; /* 최대 높이 설정 */
   max-height: ${props => props.height || '70vh'};
   border: 4px solid;
   padding: 20px;
@@ -342,7 +351,17 @@ export const RightContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 20px;
-  padding-top: 10px;
+  padding-top: 30px;
+`;
+
+export const BoxContainer2 = styled.div`
+  height: 72vh;
+  
+  display: flex;
+  flex-direction: column;
+
+  margin-bottom: 20px;
+
 `;
 
 export const TopRightContainer = styled.div`
@@ -388,7 +407,7 @@ export const BottomRightContainer = styled.div`
 `;
 
 export const MidRightContainer = styled.div`
-  flex: 3;
+  flex: 2;
   width: 40vw;
   padding: 2vh;
   border: 4px solid #000;
