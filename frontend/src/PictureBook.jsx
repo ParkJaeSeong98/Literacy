@@ -124,8 +124,8 @@ const PictureBook = () => {
                         {/* 사용자 입력창 */}
                         <form onSubmit={handleSubmit}>
                           <StyledTextarea
-                            size='15vh'
-                            rows="10"
+                            rows="3"
+                            maxLength="105"
                             value={userText}
                             onChange={handleInputChange}
                           />

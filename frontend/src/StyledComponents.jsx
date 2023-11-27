@@ -41,6 +41,7 @@ export const HeadText = styled.div`
   font-size: ${props => props.size || '4.5vh'};
   font-family: 'logofont';
   text-decoration: none; /* 하이퍼링크 스타일 제거 */
+  color: ${props => (props.result === '땡' || props.result === '죄송합니다. 다시 시도해주세요.' ? 'red' : 'black')};
 `;
 
 export const FunctionContainer = styled.div`
@@ -444,7 +445,7 @@ export const MidRightContainer = styled.div`
 
 export const StyledTextarea = styled.textarea`
   width: 40vw;
-  height: ${props => props.size || '20vh'};
+  //height: ${props => props.size || '20vh'};
   resize: none; /* 수직 리사이즈 활성화 */
   font-family: 'summary';
   font-size: 2.5vh;
@@ -454,29 +455,9 @@ export const StyledTextarea = styled.textarea`
   outline: none;
   background-color: #D2B48C;
 
-  white-space: pre-line; /* 줄바꿈 처리 */
-  overflow-y: auto; /* 세로 스크롤을 허용하도록 수정 */
+  //white-space: pre-line; /* 줄바꿈 처리 */
+  overflow-y: hidden; /* 세로 스크롤을 허용하도록 수정 */
   position: relative;
-
-  &::-webkit-scrollbar {
-    width: 12px;
-    height: 20px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: #888;
-    border-radius: 10px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background-color: #f1f1f1;
-    border-radius: 10px;
-  }
-
-  &:hover {
-    //overflow-y: auto;
-    //cursor: grab;
-  }
 `;
 
 // 문장별로 선택할 때 hover 기능에 필요한 스타일 컴포넌트
@@ -488,6 +469,11 @@ export const Sentence = styled.div`
     &:hover {
         border: 1px solid #00BFFF; // 마우스 호버 시 테두리 색상 설정
         background-color: #f0f0f0; // 선택된 것처럼 보이도록 배경색도 변경
+    }
+
+    &.clicked {
+      background-color: #f0f0f0;
+      border: 1px solid #00BFFF;
     }
 `;
 

@@ -6,9 +6,9 @@ import app from './firebase.js'; // firebase.js 에서 내보낸 인스턴스
 import { TailSpin } from 'react-loader-spinner'; // 로딩 상태 표시
 
 const Summary = () => {
-    const [userText, setUserText] = useState(''); // 사용자 요약본
-    const [gptOutput, setGptOutput] = useState('정답');
-    const [gptEasyOutput, setGptEasyOutput] = useState('힌트'); // 쉽게 바꿔준 거 저장
+    const [userText, setUserText] = useState('3줄 이내로 작성하세요!'); // 사용자 요약본
+    const [gptOutput, setGptOutput] = useState('하단의 체크 버튼을 누르면, 모범답안과 함께 평가해줄게요!');
+    const [gptEasyOutput, setGptEasyOutput] = useState('돋보기 모양 버튼을 클릭해서 어려운 문장을 고르면, 더 쉽게 바꿔줄게요!'); // 쉽게 바꿔준 거 저장
     const [submittedInput, setSubmittedInput] = useState('');
 
     const [showSentences, setShowSentences] = useState(false);
@@ -148,6 +148,9 @@ const Summary = () => {
     const handleNext = () => {
         if (currentArticleKey < maxArticleKey) {
             setCurrentArticleKey(currentArticleKey + 1);
+            setGptOutput('');
+            setGptEasyOutput('');
+            setUserText('');
         }
     };
 
@@ -155,6 +158,9 @@ const Summary = () => {
     const handlePrev = () => {
         if (currentArticleKey > 0) {
             setCurrentArticleKey(currentArticleKey - 1);
+            setGptOutput('');
+            setGptEasyOutput('');
+            setUserText('');
         }
     };
 
@@ -250,9 +256,11 @@ const Summary = () => {
             {/* 사용자 입력창 */}
                 <form id='myForm' onSubmit={handleSubmit}>
                     <StyledTextarea
-                        rows="10"
+                        rows="3"
+                        maxLength="105"
                         value={userText}
                         onChange={handleInputChange}
+                        onClick={() => { if (userText === '3줄 이내로 작성하세요!') setUserText(''); }}
                     />
                     <br></br>
                 </form>

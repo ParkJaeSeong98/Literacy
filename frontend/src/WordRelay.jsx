@@ -420,7 +420,7 @@ const WordRelay = () => {
               barColor ='#e7edd8'
               />
           ) : (
-            <HeadText size='8vh'>{result}<br></br></HeadText>
+            <HeadText size='8vh' result={result}>{result}<br></br></HeadText>
           )}
           
         </ColumnContainer>
