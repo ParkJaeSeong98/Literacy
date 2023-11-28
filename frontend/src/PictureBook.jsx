@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
-import { FontH, StyledTextarea, PictureBookContainer, PictureBookTop, PictureBookBottom, PictureBookBottomLeft, PictureBookBottomRight, ImageContainer, ArrowButton, CategoryImage } from './StyledComponents.jsx';
+import { ButtonContainer, UpdateButton, FontH, StyledTextarea, PictureBookContainer, PictureBookTop, PictureBookBottom, PictureBookBottomLeft, PictureBookBottomRight, ImageContainer, ArrowButton, CategoryImage, SizedBox } from './StyledComponents.jsx';
 
 import { TailSpin } from 'react-loader-spinner'; // 로딩 상태 표시
 
@@ -11,7 +11,7 @@ const PictureBook = () => {
   const [selectedBook, setSelectedBook] = useState(null); // 선택된 책 상태
   const [imageIndex, setImageIndex] = useState(0); // 이미지 인덱스
 
-  const [userText, setUserText] = useState(''); // 사용자 입력
+  const [userText, setUserText] = useState('3줄 이내로 작성하세요!'); // 사용자 입력
   const [submittedInput, setSubmittedInput] = useState('');
   const [isGPTLoading, setIsGPTLoading] = useState(false); // GPT 답변 로더
   const [gptOutput, setGptOutput] = useState(''); // GPT 답변
@@ -40,6 +40,8 @@ const PictureBook = () => {
 
   const handleBackToList = () => {
       setSelectedBook(null); // 책 목록으로 돌아가기
+      setGptOutput('');
+      setUserText('');
   };
 
   const talkToGPT = async (input, tpt, mxt) => { //input: 프롬프트, tpt: 온도, mxt: max_tokens
@@ -69,7 +71,12 @@ const PictureBook = () => {
 
   // 입력 필드의 값이 바뀔 때 호출되는 함수
   const handleInputChange = (event) => {
-    setUserText(event.target.value);
+    const newText = event.target.value;
+
+    if (newText.split('\n').length <= 3 && newText.length <= 132) {
+      setUserText(newText);
+    }
+    //setUserText(event.target.value);
   };  
 
   // 사용자가 엔터를 누르거나 버튼을 클릭할 때 호출되는 함수
@@ -117,7 +124,8 @@ const PictureBook = () => {
                         ▶
                       </ArrowButton>
                     </ImageContainer>
-                    <button onClick={handleBackToList}>목록으로</button>
+                    {/* <button onClick={handleBackToList}>🔙</button> */}
+                    <SizedBox></SizedBox>
 
                     <PictureBookBottom>
                       <PictureBookBottomLeft>
@@ -125,12 +133,20 @@ const PictureBook = () => {
                         <form onSubmit={handleSubmit}>
                           <StyledTextarea
                             rows="3"
-                            maxLength="105"
+                            maxLength="132"
                             value={userText}
                             onChange={handleInputChange}
+                            onClick={() => { if (userText === '3줄 이내로 작성하세요!') setUserText(''); }}
                           />
                           <br></br>
-                          <button type="submit">제출</button>
+
+                          <ButtonContainer>
+                            <UpdateButton onClick={handleBackToList} size='3vh'>
+                              📂 목록
+                            </UpdateButton> 
+                            <ButtonContainer content='center'><UpdateButton type="submit">✔</UpdateButton></ButtonContainer>  
+                          </ButtonContainer>  
+
                         </form>
                       </PictureBookBottomLeft>
                       <PictureBookBottomRight>

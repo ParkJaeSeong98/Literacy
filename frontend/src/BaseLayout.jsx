@@ -11,9 +11,9 @@ const BaseLayout = () => {
           <HeadText>
             <StyledLink to='/'>Literacy</StyledLink>
           </HeadText>
-          <LoginContainer>
+          {/* <LoginContainer>
             <StyledLink to='/login'><HeadText>Login/Register</HeadText></StyledLink>
-          </LoginContainer>
+          </LoginContainer> */}
         </HeadContainer>
   
         <FunctionWrapper>

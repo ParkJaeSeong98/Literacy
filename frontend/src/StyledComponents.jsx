@@ -270,7 +270,8 @@ export const SubmitButton = styled(ModalButton)`
 export const UpdateButton = styled(ModalButton)`
   background-color: #D2B48C;
   color: black;
-  font-size: 4vh;
+  font-size: ${props => props.size || '4vh'};
+  font-family: 'logofont';
 
   &:hover:not(:disabled) {
     background-color: #7d7272;
@@ -448,7 +449,7 @@ export const StyledTextarea = styled.textarea`
   //height: ${props => props.size || '20vh'};
   resize: none; /* 수직 리사이즈 활성화 */
   font-family: 'summary';
-  font-size: 2.5vh;
+  font-size: 2vh;
   padding: 2vh;
   //margin: 20px;
   border: 4px solid #000; /* 검정 테두리 추가 */
@@ -471,10 +472,12 @@ export const Sentence = styled.div`
         background-color: #f0f0f0; // 선택된 것처럼 보이도록 배경색도 변경
     }
 
-    &.clicked {
-      background-color: #f0f0f0;
+    ${({ isSelected }) =>
+    isSelected &&
+    `
       border: 1px solid #00BFFF;
-    }
+      background-color: #f0f0f0;
+  `}
 `;
 
 
@@ -521,6 +524,10 @@ export const PictureBookBottom = styled.div`
 
 export const PictureBookBottomLeft = styled.div`
   grid-column: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 export const PictureBookBottomRight = styled.div`
@@ -532,7 +539,7 @@ export const PictureBookBottomRight = styled.div`
   padding: 2vh;
   border: 4px solid #000;
   background-color: #d0d0d0;
-  font-size: 2.5vh;
+  font-size: 2vh;
 
   //display: flex;
   //justify-content: center;   가운데정렬 하고 싶은데, 텍스트가 이상해짐;;

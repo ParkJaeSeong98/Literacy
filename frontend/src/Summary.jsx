@@ -12,6 +12,7 @@ const Summary = () => {
     const [submittedInput, setSubmittedInput] = useState('');
 
     const [showSentences, setShowSentences] = useState(false);
+    const [selectedSentence, setSelectedSentence] = useState(null);
 
     const [article, setArticle] = useState(''); // 기사를 저장할 상태 변수
     const [articleSentence, setArticleSentence] = useState([]); // 기사를 문장별로 저장
@@ -81,7 +82,14 @@ const Summary = () => {
 
     // 입력 필드의 값이 바뀔 때 호출되는 함수
     const handleInputChange = (event) => {
-        setUserText(event.target.value);
+        const newText = event.target.value;
+
+        // 입력된 문자의 길이가 3줄을 초과하지 않으면 업데이트
+        if (newText.split('\n').length <= 3 && newText.length <= 132) {
+            setUserText(newText);
+        }
+
+        //setUserText(event.target.value);
     };
 
     // 사용자가 엔터를 누르거나 버튼을 클릭할 때 호출되는 함수
@@ -170,6 +178,7 @@ const Summary = () => {
 
     const handleSentenceClick = async (sentence) => {
         setIsGPTEasyLoading(true); // GPT 응답 로딩 시작
+        setSelectedSentence(sentence);
 
         const prompt = `사용자는 원래 문장이 어렵다고 느끼는 사람이다.
 
@@ -223,7 +232,7 @@ const Summary = () => {
               ) : showSentences ? (
                   articleSentence.map((sentence, index) => (
                       <> 
-                        <Sentence key={index} onClick={() => handleSentenceClick(sentence)} style={{ cursor: 'pointer' }}>
+                        <Sentence key={index} onClick={() => handleSentenceClick(sentence)} isSelected={selectedSentence === sentence} style={{ cursor: 'pointer' }}>
                             {sentence}
                         </Sentence>
                         {index !== articleSentence.length - 1 && <br />}
@@ -257,7 +266,7 @@ const Summary = () => {
                 <form id='myForm' onSubmit={handleSubmit}>
                     <StyledTextarea
                         rows="3"
-                        maxLength="105"
+                        maxLength="132"
                         value={userText}
                         onChange={handleInputChange}
                         onClick={() => { if (userText === '3줄 이내로 작성하세요!') setUserText(''); }}
