@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BoxContainer2, StyledTextarea, SummaryContainer, RightContainer, LeftContainer, TopRightContainer, BottomRightContainer, Sentence, SentenceContainer, Category, MidRightContainer, ButtonContainer, UpdateButton, BoxContainer } from './StyledComponents.jsx';
+import { BoxContainer2, StyledTextarea, SummaryContainer, RightContainer, LeftContainer, TopRightContainer, BottomRightContainer, Sentence, SentenceContainer, Category, MidRightContainer, ButtonContainer, UpdateButton, BoxContainer, CenterContainer } from './StyledComponents.jsx';
 import { getDatabase, ref, onValue } from 'firebase/database';
 
 import app from './firebase.js'; // firebase.js 에서 내보낸 인스턴스
@@ -156,9 +156,9 @@ const Summary = () => {
     const handleNext = () => {
         if (currentArticleKey < maxArticleKey) {
             setCurrentArticleKey(currentArticleKey + 1);
-            setGptOutput('');
-            setGptEasyOutput('');
-            setUserText('');
+            setGptOutput('하단의 체크 버튼을 누르면, 모범답안과 함께 평가해줄게요!');
+            setGptEasyOutput('돋보기 모양 버튼을 클릭해서 어려운 문장을 고르면, 더 쉽게 바꿔줄게요!');
+            setUserText('3줄 이내로 작성하세요!');
         }
     };
 
@@ -166,9 +166,9 @@ const Summary = () => {
     const handlePrev = () => {
         if (currentArticleKey > 0) {
             setCurrentArticleKey(currentArticleKey - 1);
-            setGptOutput('');
-            setGptEasyOutput('');
-            setUserText('');
+            setGptOutput('하단의 체크 버튼을 누르면, 모범답안과 함께 평가해줄게요!');
+            setGptEasyOutput('돋보기 모양 버튼을 클릭해서 어려운 문장을 고르면, 더 쉽게 바꿔줄게요!');
+            setUserText('3줄 이내로 작성하세요!');
         }
     };
 
@@ -283,7 +283,7 @@ const Summary = () => {
                     width={100} // 로더의 너비
                     />
                 ) : (
-                    <div>{gptEasyOutput}</div>
+                    <CenterContainer>{gptEasyOutput}</CenterContainer>
                 )}
             </MidRightContainer>
 
@@ -296,7 +296,7 @@ const Summary = () => {
                     width={100} // 로더의 너비
                     />
                 ) : (
-                    <div>{gptOutput}</div>
+                    <CenterContainer>{gptOutput}</CenterContainer>
                 )}
             </BottomRightContainer>
            </BoxContainer2>       

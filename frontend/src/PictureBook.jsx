@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
-import { ButtonContainer, UpdateButton, FontH, StyledTextarea, PictureBookContainer, PictureBookTop, PictureBookBottom, PictureBookBottomLeft, PictureBookBottomRight, ImageContainer, ArrowButton, CategoryImage, SizedBox } from './StyledComponents.jsx';
+import { ButtonContainer, UpdateButton, FontH, StyledTextarea, PictureBookContainer, PictureBookTop, PictureBookBottom, PictureBookBottomLeft, PictureBookBottomRight, ImageContainer, ArrowButton, CategoryImage, SizedBox, CenterContainer } from './StyledComponents.jsx';
 
 import { TailSpin } from 'react-loader-spinner'; // 로딩 상태 표시
 
@@ -14,7 +14,7 @@ const PictureBook = () => {
   const [userText, setUserText] = useState('3줄 이내로 작성하세요!'); // 사용자 입력
   const [submittedInput, setSubmittedInput] = useState('');
   const [isGPTLoading, setIsGPTLoading] = useState(false); // GPT 답변 로더
-  const [gptOutput, setGptOutput] = useState(''); // GPT 답변
+  const [gptOutput, setGptOutput] = useState('체크 버튼을 누르면, 출판사의 의견과 비교해줄게요!'); // GPT 답변
 
   // 선택된 책의 이미지 경로를 생성하는 함수
   const getImagePath = (id, index) => {
@@ -40,8 +40,8 @@ const PictureBook = () => {
 
   const handleBackToList = () => {
       setSelectedBook(null); // 책 목록으로 돌아가기
-      setGptOutput('');
-      setUserText('');
+      setGptOutput('체크 버튼을 누르면, 출판사의 의견과 비교해줄게요!');
+      setUserText('3줄 이내로 작성하세요!');
   };
 
   const talkToGPT = async (input, tpt, mxt) => { //input: 프롬프트, tpt: 온도, mxt: max_tokens
@@ -158,7 +158,7 @@ const PictureBook = () => {
                             width={100} // 로더의 너비
                           />
                         ) : (
-                          <div>{gptOutput}</div>
+                          <CenterContainer>{gptOutput}</CenterContainer>
                         )}
                       </PictureBookBottomRight>
                     </PictureBookBottom>

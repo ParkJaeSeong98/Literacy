@@ -379,9 +379,9 @@ export const BottomRightContainer = styled.div`
   background-color: #d0d0d0;
   font-size: 2vh;
 
-  //display: flex;
-  //justify-content: center;   가운데정렬 하고 싶은데, 텍스트가 이상해짐;;
-  //align-items: center;
+  display: flex;
+  justify-content: center;   가운데정렬 하고 싶은데, 텍스트가 이상해짐;;
+  align-items: center;
 
   white-space: pre-line; /* 줄바꿈 처리 */
   overflow-y: auto; /* 세로 스크롤을 허용하도록 수정 */
@@ -416,7 +416,9 @@ export const MidRightContainer = styled.div`
   margin-bottom: 2vh;
   font-size: 2vh;
 
-
+  display: flex;
+  justify-content: center;  
+  align-items: center;
 
   white-space: pre-line; /* 줄바꿈 처리 */
   overflow-y: auto; /* 세로 스크롤을 허용하도록 수정 */
@@ -468,14 +470,14 @@ export const Sentence = styled.div`
     //padding: 0.5em;
     border-radius: 10px;
     &:hover {
-        border: 1px solid #00BFFF; // 마우스 호버 시 테두리 색상 설정
+        border: 1px solid #cfcca1; // 마우스 호버 시 테두리 색상 설정
         background-color: #f0f0f0; // 선택된 것처럼 보이도록 배경색도 변경
     }
 
     ${({ isSelected }) =>
     isSelected &&
     `
-      border: 1px solid #00BFFF;
+      border: 1px solid #cfcca1;
       background-color: #f0f0f0;
   `}
 `;
@@ -530,6 +532,10 @@ export const PictureBookBottomLeft = styled.div`
   justify-content: space-between;
 `;
 
+export const CenterContainer = styled.div`
+  max-height: 100%;
+`;
+
 export const PictureBookBottomRight = styled.div`
   grid-column: 2;
 
@@ -540,10 +546,11 @@ export const PictureBookBottomRight = styled.div`
   border: 4px solid #000;
   background-color: #d0d0d0;
   font-size: 2vh;
+  font-family: 'summary'
 
-  //display: flex;
-  //justify-content: center;   가운데정렬 하고 싶은데, 텍스트가 이상해짐;;
-  //align-items: center;
+  display: flex;
+  justify-content: center;   가운데정렬 하고 싶은데, 텍스트가 이상해짐;;
+  align-items: center;
 
   white-space: pre-line; /* 줄바꿈 처리 */
   overflow-y: auto; /* 세로 스크롤을 허용하도록 수정 */
