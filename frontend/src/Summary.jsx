@@ -6,7 +6,7 @@ import app from './firebase.js'; // firebase.js 에서 내보낸 인스턴스
 import { TailSpin } from 'react-loader-spinner'; // 로딩 상태 표시
 
 const Summary = () => {
-    const [userText, setUserText] = useState('3줄 이내로 작성하세요!'); // 사용자 요약본
+    const [userText, setUserText] = useState('이곳에 글을 요약해보세요!'); // 사용자 요약본
     const [gptOutput, setGptOutput] = useState('하단의 체크 버튼을 누르면, 모범답안과 함께 평가해줄게요!');
     const [gptEasyOutput, setGptEasyOutput] = useState('돋보기 모양 버튼을 클릭해서 어려운 문장을 고르면, 더 쉽게 바꿔줄게요!'); // 쉽게 바꿔준 거 저장
     const [submittedInput, setSubmittedInput] = useState('');
@@ -82,14 +82,7 @@ const Summary = () => {
 
     // 입력 필드의 값이 바뀔 때 호출되는 함수
     const handleInputChange = (event) => {
-        const newText = event.target.value;
-
-        // 입력된 문자의 길이가 3줄을 초과하지 않으면 업데이트
-        if (newText.split('\n').length <= 3 && newText.length <= 132) {
-            setUserText(newText);
-        }
-
-        //setUserText(event.target.value);
+        setUserText(event.target.value);
     };
 
     // 사용자가 엔터를 누르거나 버튼을 클릭할 때 호출되는 함수
@@ -158,7 +151,7 @@ const Summary = () => {
             setCurrentArticleKey(currentArticleKey + 1);
             setGptOutput('하단의 체크 버튼을 누르면, 모범답안과 함께 평가해줄게요!');
             setGptEasyOutput('돋보기 모양 버튼을 클릭해서 어려운 문장을 고르면, 더 쉽게 바꿔줄게요!');
-            setUserText('3줄 이내로 작성하세요!');
+            setUserText('이곳에 글을 요약해보세요!');
         }
     };
 
@@ -168,7 +161,7 @@ const Summary = () => {
             setCurrentArticleKey(currentArticleKey - 1);
             setGptOutput('하단의 체크 버튼을 누르면, 모범답안과 함께 평가해줄게요!');
             setGptEasyOutput('돋보기 모양 버튼을 클릭해서 어려운 문장을 고르면, 더 쉽게 바꿔줄게요!');
-            setUserText('3줄 이내로 작성하세요!');
+            setUserText('이곳에 글을 요약해보세요!');
         }
     };
 
@@ -266,10 +259,9 @@ const Summary = () => {
                 <form id='myForm' onSubmit={handleSubmit}>
                     <StyledTextarea
                         rows="3"
-                        maxLength="132"
                         value={userText}
                         onChange={handleInputChange}
-                        onClick={() => { if (userText === '3줄 이내로 작성하세요!') setUserText(''); }}
+                        onClick={() => { if (userText === '이곳에 글을 요약해보세요!') setUserText(''); }}
                     />
                     <br></br>
                 </form>

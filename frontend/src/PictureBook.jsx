@@ -11,7 +11,7 @@ const PictureBook = () => {
   const [selectedBook, setSelectedBook] = useState(null); // 선택된 책 상태
   const [imageIndex, setImageIndex] = useState(0); // 이미지 인덱스
 
-  const [userText, setUserText] = useState('3줄 이내로 작성하세요!'); // 사용자 입력
+  const [userText, setUserText] = useState('그림책을 보고 이곳에 내용을 추측해보세요!'); // 사용자 입력
   const [submittedInput, setSubmittedInput] = useState('');
   const [isGPTLoading, setIsGPTLoading] = useState(false); // GPT 답변 로더
   const [gptOutput, setGptOutput] = useState('체크 버튼을 누르면, 출판사의 의견과 비교해줄게요!'); // GPT 답변
@@ -41,7 +41,7 @@ const PictureBook = () => {
   const handleBackToList = () => {
       setSelectedBook(null); // 책 목록으로 돌아가기
       setGptOutput('체크 버튼을 누르면, 출판사의 의견과 비교해줄게요!');
-      setUserText('3줄 이내로 작성하세요!');
+      setUserText('그림책을 보고 이곳에 내용을 추측해보세요!');
   };
 
   const talkToGPT = async (input, tpt, mxt) => { //input: 프롬프트, tpt: 온도, mxt: max_tokens
@@ -71,12 +71,7 @@ const PictureBook = () => {
 
   // 입력 필드의 값이 바뀔 때 호출되는 함수
   const handleInputChange = (event) => {
-    const newText = event.target.value;
-
-    if (newText.split('\n').length <= 3 && newText.length <= 132) {
-      setUserText(newText);
-    }
-    //setUserText(event.target.value);
+   setUserText(event.target.value);
   };  
 
   // 사용자가 엔터를 누르거나 버튼을 클릭할 때 호출되는 함수
@@ -133,10 +128,9 @@ const PictureBook = () => {
                         <form onSubmit={handleSubmit}>
                           <StyledTextarea
                             rows="3"
-                            maxLength="132"
                             value={userText}
                             onChange={handleInputChange}
-                            onClick={() => { if (userText === '3줄 이내로 작성하세요!') setUserText(''); }}
+                            onClick={() => { if (userText === '그림책을 보고 이곳에 내용을 추측해보세요!') setUserText(''); }}
                           />
                           <br></br>
 

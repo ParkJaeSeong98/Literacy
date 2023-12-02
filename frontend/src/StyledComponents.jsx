@@ -458,9 +458,29 @@ export const StyledTextarea = styled.textarea`
   outline: none;
   background-color: #D2B48C;
 
-  //white-space: pre-line; /* 줄바꿈 처리 */
-  overflow-y: hidden; /* 세로 스크롤을 허용하도록 수정 */
+  white-space: pre-line; /* 줄바꿈 처리 */
+  overflow-y: auto; /* 세로 스크롤을 허용하도록 수정 */
   position: relative;
+
+  &::-webkit-scrollbar {
+    width: 12px;
+    height: 20px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  &:hover {
+    //overflow-y: auto;
+    //cursor: grab;
+  }
 `;
 
 // 문장별로 선택할 때 hover 기능에 필요한 스타일 컴포넌트
