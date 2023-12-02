@@ -375,12 +375,13 @@ export const BottomRightContainer = styled.div`
   flex: 3;
   width: 40vw;
   padding: 2vh;
+  margin-bottom: 2vh;
   border: 4px solid #000;
-  background-color: #d0d0d0;
+  background-color: #ffeac4;
   font-size: 2vh;
 
   display: flex;
-  justify-content: center;   가운데정렬 하고 싶은데, 텍스트가 이상해짐;;
+  justify-content: center;   
   align-items: center;
 
   white-space: pre-line; /* 줄바꿈 처리 */
@@ -413,8 +414,9 @@ export const MidRightContainer = styled.div`
   width: 40vw;
   padding: 2vh;
   border: 4px solid #000;
-  margin-bottom: 2vh;
+  //margin-bottom: 2vh; 위치 바꿈
   font-size: 2vh;
+  background-color: #ffffba;
 
   display: flex;
   justify-content: center;  
@@ -564,12 +566,12 @@ export const PictureBookBottomRight = styled.div`
   height: 15vh;
   padding: 2vh;
   border: 4px solid #000;
-  background-color: #d0d0d0;
+  background-color: #ffeac4;
   font-size: 2vh;
-  font-family: 'summary'
+  font-family: 'summary';
 
   display: flex;
-  justify-content: center;   가운데정렬 하고 싶은데, 텍스트가 이상해짐;;
+  justify-content: center;  
   align-items: center;
 
   white-space: pre-line; /* 줄바꿈 처리 */

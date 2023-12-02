@@ -264,18 +264,6 @@ const Summary = () => {
                 </form>
             </TopRightContainer>
 
-            <MidRightContainer>
-                {isGPTEasyLoading ? (
-                    <TailSpin
-                    color="#8e8d8f" // 로더의 색상
-                    height={100} // 로더의 높이
-                    width={100} // 로더의 너비
-                    />
-                ) : (
-                    <CenterContainer>{gptEasyOutput}</CenterContainer>
-                )}
-            </MidRightContainer>
-
             <BottomRightContainer>
                 {/* gpt output */}
                 {isGPTLoading ? (
@@ -288,6 +276,20 @@ const Summary = () => {
                     <CenterContainer>{gptOutput}</CenterContainer>
                 )}
             </BottomRightContainer>
+
+            <MidRightContainer>
+                {isGPTEasyLoading ? (
+                    <TailSpin
+                    color="#8e8d8f" // 로더의 색상
+                    height={100} // 로더의 높이
+                    width={100} // 로더의 너비
+                    />
+                ) : (
+                    <CenterContainer>{gptEasyOutput}</CenterContainer>
+                )}
+            </MidRightContainer>
+
+            
            </BoxContainer2>       
             <ButtonContainer content='center'><UpdateButton type="submit" form="myForm">✔</UpdateButton></ButtonContainer>   
           
