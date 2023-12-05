@@ -163,13 +163,16 @@ const PictureBook = () => {
                     <FontH>책 목록</FontH>
                     <div>
                       {books.map((book) => (
+                        <>
                         <CategoryImage>
                         <div key={book.id} onClick={() => handleBookClick(book)} style={{ cursor: 'pointer' }}>
                             {/* {book.title} */}
                             <img src={getImagePath(book.id, 0)} alt="Book Preview" style={{ width: '200px', height: '200px' }} />  
                         </div>
-                        <br></br>
+                        
                         </CategoryImage>
+                        <br></br>
+                        </>
                       ))}
                     </div>
                     
