@@ -8,7 +8,9 @@
 This project is made in 2023 2nd semester Capstone Design(2) class.
 You can run in any web browser.
 
+<div align="center">
 <img width="80%" src="https://github.com/ParkJaeSeong98/Literacy/assets/48883899/aa95fcd0-871f-471c-be4d-9009d61f93cc">
+</div>
 
 ## 📖 Important Packages
 - react
