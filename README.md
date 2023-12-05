@@ -41,4 +41,8 @@ You can run in any web browser.
 
 Go to http://localhost:3000/
 
+## Instruction (Manual)
+메뉴얼 확정되면 pdf 로 추가할 예정
+
+
 
