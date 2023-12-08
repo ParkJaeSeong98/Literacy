@@ -42,7 +42,7 @@ You can run in any web browser.
 Go to http://localhost:3000/
 
 ## Instruction (Manual)
-메뉴얼 확정되면 pdf 로 추가할 예정
+<a href="https://github.com/ParkJaeSeong98/Literacy/files/13615183/default.pdf">Click Here to Download!</a>
 
 
 
